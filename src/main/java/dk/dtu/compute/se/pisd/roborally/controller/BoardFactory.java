@@ -144,6 +144,17 @@ public class BoardFactory {
         action.setHeading(Heading.WEST);
         space.getActions().add(action);
 
+        space = board.getSpace(3,7);
+        CheckPoint actionCheckPoint = new CheckPoint();
+        actionCheckPoint.setNumber(1);
+        space.getActions().add(actionCheckPoint);
+
+        space = board.getSpace(4,5);
+        actionCheckPoint = new CheckPoint();
+        actionCheckPoint.setNumber(2);
+        space.getActions().add(actionCheckPoint);
+
+
         return board;
     }
 
