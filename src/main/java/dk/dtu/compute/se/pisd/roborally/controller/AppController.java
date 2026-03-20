@@ -64,12 +64,12 @@ public class AppController implements Observer {
     }
 
     public void newGame() {
-        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
-        dialog.setTitle("Player number");
-        dialog.setHeaderText("Select number of players");
-        Optional<Integer> result = dialog.showAndWait();
+        ChoiceDialog<Integer> dialogPlayer = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
+        dialogPlayer.setTitle("Player number");
+        dialogPlayer.setHeaderText("Select number of players");
+        Optional<Integer> resultPlayer = dialogPlayer.showAndWait();
 
-        if (result.isPresent()) {
+        if (resultPlayer.isPresent()) {
             if (gameController != null) {
                 // The UI should not allow this, but in case this happens anyway.
                 // give the user the option to save the game or abort this operation!
@@ -83,11 +83,17 @@ public class AppController implements Observer {
             //     available boards, and then create the chosen board using
             //     the BoardFactory (instead of creating an empty board).
 
+            BoardFactory factory = BoardFactory.getInstance();
+            ChoiceDialog<String> dialogBoard = new ChoiceDialog<>(factory.getAvalibleBoardNames().get(0), factory.getAvalibleBoardNames());
+            dialogBoard.setTitle("Board type");
+            dialogBoard.setHeaderText("Select a type of board");
+            Optional<String> resultWall = dialogBoard.showAndWait();
+
             // The code below just creates an empty board with the chosen
             // number of players on it.
-            Board board = new Board(8,8);
+            Board board = factory.createBoard(String.valueOf(resultWall));
             gameController = new GameController(board);
-            int no = result.get();
+            int no = resultPlayer.get();
             for (int i = 0; i < no; i++) {
                 Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
                 board.addPlayer(player);
