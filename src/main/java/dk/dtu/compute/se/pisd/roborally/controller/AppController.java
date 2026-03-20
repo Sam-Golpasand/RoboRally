@@ -26,9 +26,6 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
-import dk.dtu.compute.se.pisd.roborally.dal.GameInDB;
-import dk.dtu.compute.se.pisd.roborally.dal.RepositoryAccess;
-import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
@@ -84,7 +81,7 @@ public class AppController implements Observer {
             //     the BoardFactory (instead of creating an empty board).
 
             BoardFactory factory = BoardFactory.getInstance();
-            ChoiceDialog<String> dialogBoard = new ChoiceDialog<>(factory.getAvalibleBoardNames().get(0), factory.getAvalibleBoardNames());
+            ChoiceDialog<String> dialogBoard = new ChoiceDialog<>(factory.getAvailableBoardNames().get(0), factory.getAvailableBoardNames());
             dialogBoard.setTitle("Board type");
             dialogBoard.setHeaderText("Select a type of board");
             Optional<String> resultWall = dialogBoard.showAndWait();

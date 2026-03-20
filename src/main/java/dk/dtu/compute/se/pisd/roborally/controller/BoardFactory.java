@@ -81,6 +81,13 @@ public class BoardFactory {
 
     }
 
+    /**
+     * Configures a board by setting up walls and conveyor belts at specific spaces
+     * to create a simple board structure.
+     *
+     * @param board the board to be configured as a simple board
+     * @return the configured simple board
+     */
     private Board buildSimpleBoard(Board board) {
         Space space = board.getSpace(0,0);
         space.getWalls().add(Heading.SOUTH);
@@ -114,6 +121,13 @@ public class BoardFactory {
         return board;
     }
 
+    /**
+     * Constructs and configures an advanced board by setting up walls, conveyor belts,
+     * and checkpoints on specific spaces of the provided board.
+     *
+     * @param board the board to be configured as an advanced board
+     * @return the configured advanced board
+     */
     private Board buildAdvancedBoard(Board board) {
         Space space = board.getSpace(0,0);
         space.getWalls().add(Heading.SOUTH);
@@ -166,7 +180,14 @@ public class BoardFactory {
     //     names in this list. Make sure that the new method that you create
     //     here has a proper JavaDoc documentation.
     //
-    public List<String> getAvalibleBoardNames() {
+
+    /**
+     * Retrieves the list of available board names that can be created.
+     * The board names represent the types of boards supported by this factory.
+     *
+     * @return a list of strings containing the names of the available boards
+     */
+    public List<String> getAvailableBoardNames() {
         return boardNames;
     }
 
