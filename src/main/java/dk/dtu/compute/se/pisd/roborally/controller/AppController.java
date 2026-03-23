@@ -83,21 +83,32 @@ public class AppController implements Observer {
             //     available boards, and then create the chosen board using
             //     the BoardFactory (instead of creating an empty board).
 
-            // The code below just creates an empty board with the chosen
-            // number of players on it.
-            Board board = new Board(8,8);
-            gameController = new GameController(board);
-            int no = result.get();
-            for (int i = 0; i < no; i++) {
-                Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
-                board.addPlayer(player);
-                player.setSpace(board.getSpace(i % board.width, i));
-            }
+            BoardFactory factory = BoardFactory.getInstance();
 
+            ChoiceDialog<String> boardDialog = new ChoiceDialog<>(factory.getBoards().get(0), factory.getBoards());
+            boardDialog.setTitle("Board type");
+            boardDialog.setHeaderText("Select board type");
+            Optional<String> boardResult = boardDialog.showAndWait();
+
+            if (boardResult.isPresent()) {
+
+                String boardName = boardResult.get();
+                // The code below just creates an empty board with the chosen
+                // number of players on it.
+                Board board = factory.createBoard(boardName);
+                gameController = new GameController(board);
+                int no = result.get();
+                for (int i = 0; i < no; i++) {
+                    Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
+                    board.addPlayer(player);
+                    player.setSpace(board.getSpace(i % board.width, i));
+                }
             // XXX V2
             gameController.startProgrammingPhase();
 
             roboRally.createBoardView(gameController);
+            }
+
         }
     }
 

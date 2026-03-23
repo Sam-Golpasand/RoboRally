@@ -1,5 +1,8 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
@@ -16,11 +19,16 @@ public class BoardFactory {
      * The single instance of this class, which is lazily instantiated on demand.
      */
     static private BoardFactory instance = null;
-
+    static private List<String> boardNames;
     /**
      * Constructor for BoardFactory. It is private in order to make the factory a singleton.
      */
     private BoardFactory() {
+        List<String> availableBoards = new ArrayList<>();
+        availableBoards.add("simple");
+        availableBoards.add("advanced");
+
+        boardNames = availableBoards;
     }
 
     /**
@@ -42,6 +50,8 @@ public class BoardFactory {
      *
      * @param name the given name board
      * @return the new board corresponding to that name
+     * 
+     * @author Sam Golpasand
      */
     public Board createBoard(String name) {
         // TODO A6b: Implement this method properly as described in Assignment 6b.
@@ -50,12 +60,28 @@ public class BoardFactory {
         //     be returned (defensive programming).
 
         Board board;
-        if (name == null) {
-            board = new Board(8,8, "<none>");
-        } else {
-            board = new Board(8,8, name);
+
+        switch (name) {
+            case "simple":
+                board = buildSimpleBoard();
+                break;
+            case "advanced":
+                board = buildAdvancedBoard();
+            default:
+                board = buildSimpleBoard();
+                break;
         }
 
+        return board;
+
+
+
+    }
+
+    private Board buildSimpleBoard() {
+        Board board = new Board(8, 8, "simple");
+
+        
         // add some walls, actions and checkpoints to some spaces
         Space space = board.getSpace(0,0);
         space.getWalls().add(Heading.SOUTH);
@@ -89,11 +115,55 @@ public class BoardFactory {
         return board;
     }
 
+    private Board buildAdvancedBoard() {
+
+        Board board = new Board(8, 8, "advanced");
+        
+        // add some walls, actions and checkpoints to some spaces
+        Space space = board.getSpace(0,0);
+        space.getWalls().add(Heading.SOUTH);
+        ConveyorBelt action  = new ConveyorBelt();
+        action.setHeading(Heading.WEST);
+        space.getActions().add(action);
+
+        space = board.getSpace(1,0);
+        space.getWalls().add(Heading.NORTH);
+        action  = new ConveyorBelt();
+        action.setHeading(Heading.WEST);
+        space.getActions().add(action);
+
+        space = board.getSpace(1,1);
+        space.getWalls().add(Heading.WEST);
+        action  = new ConveyorBelt();
+        action.setHeading(Heading.NORTH);
+        space.getActions().add(action);
+
+        space = board.getSpace(5,5);
+        space.getWalls().add(Heading.SOUTH);
+        action  = new ConveyorBelt();
+        action.setHeading(Heading.WEST);
+        space.getActions().add(action);
+
+        space = board.getSpace(6,5);
+        action  = new ConveyorBelt();
+        action.setHeading(Heading.WEST);
+        space.getActions().add(action);
+
+        return board;
+    }
+
+
+
     // TODO A6b: add a method that returns a list (of type List<String>)
     //     of all available board names. The corresponding method
     //     createBoard(String name) must return a board for any of the
     //     names in this list. Make sure that the new method that you create
     //     here has a proper JavaDoc documentation.
     //
+
+    public List<String> getBoards() {
+        return boardNames;
+    }
+    
 
 }
