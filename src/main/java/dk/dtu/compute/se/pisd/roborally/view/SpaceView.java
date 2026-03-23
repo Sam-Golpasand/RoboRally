@@ -22,11 +22,21 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.Checkpoint;
+import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
+import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
+import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -90,8 +100,79 @@ public class SpaceView extends StackPane implements ViewObserver {
         if (subject == this.space) {
             this.getChildren().clear();
 
-            // TODO A6b: drawing the walls and the field action(s) on
-            //     this space could be implemented here.
+
+            for (Heading heading: space.getWalls()) {
+                Pane pane = new Pane();
+                Rectangle rectangle =
+                        new Rectangle(0.0, 0.0, SPACE_WIDTH, SPACE_HEIGHT);
+                rectangle.setFill(Color.TRANSPARENT);
+                pane.getChildren().add(rectangle);
+
+                if (heading == Heading.SOUTH) {
+                    Line line =
+                            new Line(2, SPACE_HEIGHT - 2,
+                                    SPACE_WIDTH - 2, SPACE_HEIGHT - 2);
+                    line.setStroke(Color.RED);
+                    line.setStrokeWidth(5);
+                    pane.getChildren().add(line);
+                    this.getChildren().add(pane);
+                }
+
+                if (heading == Heading.NORTH) {
+                    Line line =
+                            new Line(2, 2,
+                                    SPACE_WIDTH - 2, 2);
+                    line.setStroke(Color.RED);
+                    line.setStrokeWidth(5);
+                    pane.getChildren().add(line);
+                    this.getChildren().add(pane);
+                }
+
+                if (heading == Heading.EAST) {
+                    Line line =
+                            new Line(SPACE_WIDTH - 2, 2,
+                                    SPACE_WIDTH - 2, SPACE_HEIGHT - 2);
+                    line.setStroke(Color.RED);
+                    line.setStrokeWidth(5);
+                    pane.getChildren().add(line);
+                    this.getChildren().add(pane);
+                }
+
+                if (heading == Heading.WEST) {
+                    Line line =
+                            new Line(2, 2,
+                                    2, SPACE_HEIGHT - 2);
+                    line.setStroke(Color.RED);
+                    line.setStrokeWidth(5);
+                    pane.getChildren().add(line);
+                    this.getChildren().add(pane);
+                }
+            }
+
+            for (FieldAction fieldAction: space.getActions()) {
+                if (fieldAction instanceof ConveyorBelt) {
+                    Heading heading = ((ConveyorBelt) fieldAction).getHeading();
+                    Polygon arrow = new Polygon(2.0, 2.0,
+                            (SPACE_WIDTH-6.0)/2.0, SPACE_HEIGHT-6.0,
+                            SPACE_WIDTH-6.0, 2.0 );
+                    arrow.setFill(Color.LIGHTGRAY);
+                    arrow.setStroke(Color.GREY);
+                    arrow.setRotate((90*heading.ordinal()) % 360);
+                    this.getChildren().add(arrow);
+                }
+
+                if (fieldAction instanceof Checkpoint) {
+                    Circle circle = new Circle(
+                            (SPACE_HEIGHT-6)/2.0);
+                    circle.setFill(Color.YELLOW);
+                    this.getChildren().add(circle);
+
+                    Text text = new Text("lol");
+                    text.setStroke(Color.BLACK);
+                    this.getChildren().add(text);
+                }
+            }
+
 
             updatePlayer();
         }

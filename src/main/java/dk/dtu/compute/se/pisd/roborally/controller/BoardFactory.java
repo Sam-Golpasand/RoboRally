@@ -67,6 +67,7 @@ public class BoardFactory {
                 break;
             case "advanced":
                 board = buildAdvancedBoard();
+                break;
             default:
                 board = buildSimpleBoard();
                 break;
@@ -117,7 +118,7 @@ public class BoardFactory {
 
     private Board buildAdvancedBoard() {
 
-        Board board = new Board(8, 8, "advanced");
+        Board board = new Board(12, 12, "advanced");
         
         // add some walls, actions and checkpoints to some spaces
         Space space = board.getSpace(0,0);
@@ -126,25 +127,25 @@ public class BoardFactory {
         action.setHeading(Heading.WEST);
         space.getActions().add(action);
 
-        space = board.getSpace(1,0);
+        space = board.getSpace(5,6);
         space.getWalls().add(Heading.NORTH);
         action  = new ConveyorBelt();
         action.setHeading(Heading.WEST);
         space.getActions().add(action);
 
-        space = board.getSpace(1,1);
+        space = board.getSpace(6,3);
         space.getWalls().add(Heading.WEST);
         action  = new ConveyorBelt();
         action.setHeading(Heading.NORTH);
         space.getActions().add(action);
 
-        space = board.getSpace(5,5);
+        space = board.getSpace(2,3);
         space.getWalls().add(Heading.SOUTH);
         action  = new ConveyorBelt();
         action.setHeading(Heading.WEST);
         space.getActions().add(action);
 
-        space = board.getSpace(6,5);
+        space = board.getSpace(3,5);
         action  = new ConveyorBelt();
         action.setHeading(Heading.WEST);
         space.getActions().add(action);
