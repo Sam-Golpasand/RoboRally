@@ -166,13 +166,12 @@ public class BoardFactory {
 
 
 
-    // TODO A6b: add a method that returns a list (of type List<String>)
-    //     of all available board names. The corresponding method
-    //     createBoard(String name) must return a board for any of the
-    //     names in this list. Make sure that the new method that you create
-    //     here has a proper JavaDoc documentation.
-    //
-
+    /**
+     * Get all the available boards from the private boardNames list.
+     * 
+     * @return list of board names
+     * @author Sam Golpasand
+     */
     public List<String> getBoards() {
         return boardNames;
     }
