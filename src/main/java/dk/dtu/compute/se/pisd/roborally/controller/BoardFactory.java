@@ -1,6 +1,7 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import dk.dtu.compute.se.pisd.roborally.model.Board;
@@ -28,7 +29,7 @@ public class BoardFactory {
         availableBoards.add("simple");
         availableBoards.add("advanced");
 
-        boardNames = availableBoards;
+        boardNames = Collections.unmodifiableList(availableBoards);
     }
 
     /**

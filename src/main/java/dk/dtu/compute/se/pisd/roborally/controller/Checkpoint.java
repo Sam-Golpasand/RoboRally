@@ -9,6 +9,16 @@ import dk.dtu.compute.se.pisd.roborally.model.Space;
  */
 public class Checkpoint extends FieldAction {
 
+    private int id;
+
+    public int getId() {
+        return id;
+    }  
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public boolean doAction(GameController gameController, Space space) {
         // TODO Auto-generated method stub
