@@ -71,7 +71,9 @@ public class GameController {
         
     }
 
-    // XXX A6c
+    /**
+     * This starts 
+     */
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);
         board.setCurrentPlayer(board.getPlayer(0));
@@ -210,8 +212,12 @@ public class GameController {
                 case FAST_FORWARD:
                     this.fastForward(player);
                     break;
-                // TODO A6c: add the cases for the new commands BACK and UTURN to
-                //     this case statement.
+                case U_TURN:
+                    this.uTurn(player);
+                    break;
+                case BACK:
+                    this.back(player);
+                    break;
                 default:
                     // DO NOTHING (for now)//
             }
@@ -220,22 +226,62 @@ public class GameController {
 
     // TODO A6c: implement this method
     public void moveForward(@NotNull Player player) {
+        Heading heading = player.getHeading();
+        Space from = player.getSpace();
+        Space to = board.getNeighbour(from, heading);
 
+        // off-board: do nothing (or handle as fall/death later)
+        if (to == null) {
+            return;
+        }
+
+        Space toFrom = board.getNeighbour(to, heading.next().next());
+
+        // simple rule: cannot move into occupied space
+        if (toFrom == null) {
+            return;
+        }
+
+        player.setSpace(to);
     }
 
     // TODO A6c: implement this method
     public void fastForward(@NotNull Player player) {
+        moveForward(player);
+        moveForward(player);
 
     }
 
-    // TODO A6c: implement this method
+    // DONE A6c: implement this method
     public void turnRight(@NotNull Player player) {
 
+        Heading playerHeading = player.getHeading();
+        player.setHeading(playerHeading.next());
     }
 
-    // TODO A6c: implement this method
+    // DONE A6c: implement this method
     public void turnLeft(@NotNull Player player) {
 
+        Heading playerHeading = player.getHeading();
+        player.setHeading(playerHeading.prev());
+    }
+
+    public void uTurn(@NotNull Player player) {
+        turnLeft(player);
+        turnLeft(player);
+    }
+
+    public void back(@NotNull Player player) {
+        Heading heading = player.getHeading();
+        Space from = player.getSpace();
+        Space to = board.getNeighbour(from, heading.next().next());
+
+        // off-board: do nothing (or handle as fall/death later)
+        if (to == null) {
+            return;
+        }
+
+        player.setSpace(to);
     }
 
     // TODO A6c: Add two methods for the new commands BACK and UTURN here.

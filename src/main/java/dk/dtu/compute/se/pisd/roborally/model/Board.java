@@ -27,6 +27,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dk.dtu.compute.se.pisd.roborally.model.Heading.EAST;
+import static dk.dtu.compute.se.pisd.roborally.model.Heading.NORTH;
+import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
+import static dk.dtu.compute.se.pisd.roborally.model.Heading.WEST;
 import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
 
 /**
@@ -218,9 +222,17 @@ public class Board extends Subject {
      * @return the space in the given direction; null if there is no (reachable) neighbour
      */
     public Space getNeighbour(@NotNull Space space, @NotNull Heading heading) {
-        // TODO A6c: This implementation needs to be adjusted so that walls on
+        // DONE A6c: This implementation needs to be adjusted so that walls on
         //          spaces (and maybe other obstacles) are taken into account
         //          (see above JavaDoc comment for this method).
+
+        List<Heading> spaceHeadings = space.getWalls();
+
+        if (spaceHeadings.contains(heading)) {
+            return null;
+        }
+
+        
         int x = space.x;
         int y = space.y;
         switch (heading) {
@@ -238,6 +250,14 @@ public class Board extends Subject {
                 break;
         }
 
+        Space toSpace = getSpace(x, y);
+
+        List<Heading> headings = toSpace.getWalls();
+
+        if (headings.contains(heading.prev().prev())) {
+            return null;
+        }
+
         return getSpace(x, y);
     }
 
@@ -251,7 +271,7 @@ public class Board extends Subject {
         // TODO A6c: changed the status so that it shows the phase, the current player, and the current register
         //     and you can remove the move count status message message and the corresponding counter again
         // TODO A6e: add something to the status message, when a player has won the game
-        return "Player = " + getCurrentPlayer().getName() + " Move count: "+ getMoveCounter();
+        return "Player = " + getCurrentPlayer().getName() + "Phase: " + phase.name().toLowerCase() ;
     }
 
 }

@@ -22,11 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
-<<<<<<< HEAD
-import dk.dtu.compute.se.pisd.roborally.controller.Checkpoint;
-=======
 import dk.dtu.compute.se.pisd.roborally.controller.CheckPoint;
->>>>>>> main
 import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
@@ -40,10 +36,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-<<<<<<< HEAD
-
-=======
->>>>>>> main
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -107,10 +99,6 @@ public class SpaceView extends StackPane implements ViewObserver {
         if (subject == this.space) {
             this.getChildren().clear();
 
-<<<<<<< HEAD
-
-=======
->>>>>>> main
             for (Heading heading: space.getWalls()) {
                 Pane pane = new Pane();
                 Rectangle rectangle =
@@ -171,24 +159,16 @@ public class SpaceView extends StackPane implements ViewObserver {
                     this.getChildren().add(arrow);
                 }
 
-<<<<<<< HEAD
-                if (fieldAction instanceof Checkpoint) {
-=======
                 if (fieldAction instanceof CheckPoint) {
->>>>>>> main
                     Circle circle = new Circle(
                             (SPACE_HEIGHT-6)/2.0);
                     circle.setFill(Color.YELLOW);
                     this.getChildren().add(circle);
 
-<<<<<<< HEAD
-                    Text text = new Text("lol");
-=======
                     CheckPoint checkPoint = (CheckPoint) fieldAction;
 
                     Text text = new Text(""+
                             checkPoint.getNumber());
->>>>>>> main
                     text.setStroke(Color.BLACK);
                     this.getChildren().add(text);
                 }
