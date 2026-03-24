@@ -75,16 +75,35 @@ public class Board extends Subject {
         this.stepMode = false;
     }
 
+    /**
+     * Retrieves the current value of the move counter.
+     * The move counter tracks the total number of moves made in the game.
+     *
+     * @return the current value of the move counter
+     */
     public int getMoveCounter() {
         return moveCounter;
     }
 
+    /**
+     * Updates the move counter of the board to the specified value. The move counter
+     * tracks the total number of moves made during the game. This method ensures that any changes to the state of the
+     * board are notified with {@code notifyChange} method.
+     *
+     * @param moveCounter the new value of the move counter
+     */
     public void setMoveCounter(int moveCounter) {
         this.moveCounter = moveCounter;
         notifyChange();
     }
 
     // You could also call the setMoveCounter(++moveCounter);
+
+    /**
+     * Increments the move counter for the board, tracking the number of moves made
+     * during the game. This method ensures that any changes to the state of the
+     * board are notified with {@code notifyChange} method.
+     */
     public void incrementMoveCounter() {
         moveCounter++;
         notifyChange();

@@ -51,14 +51,9 @@ public class BoardFactory {
      *
      * @param name the given name board
      * @return the new board corresponding to that name
-     * 
      * @author Sam Golpasand
      */
     public Board createBoard(String name) {
-        // TODO A6b: Implement this method properly as described in Assignment 6b.
-        //     Dependent on the provided name, create a board accordingly and
-        //     return it. In case the name is null, some default board should
-        //     be returned (defensive programming).
 
         Board board;
 
@@ -80,6 +75,14 @@ public class BoardFactory {
 
     }
 
+    /**
+     * Configures a board by setting up walls and conveyor belts at specific spaces
+     * to create a simple board structure.
+     *
+     * @param board the board to be configured as a simple board
+     * @return the configured simple board
+     * @author Sam Golpasand
+     */
     private Board buildSimpleBoard() {
         Board board = new Board(8, 8, "simple");
 
@@ -117,6 +120,14 @@ public class BoardFactory {
         return board;
     }
 
+    /**
+     * Constructs and configures an advanced board by setting up walls, conveyor belts,
+     * and checkpoints on specific spaces of the provided board.
+     *
+     * @param board the board to be configured as an advanced board
+     * @return the configured advanced board
+     * @author Sam Golpasand
+     */
     private Board buildAdvancedBoard() {
 
         Board board = new Board(12, 12, "advanced");
@@ -156,13 +167,12 @@ public class BoardFactory {
 
 
 
-    // TODO A6b: add a method that returns a list (of type List<String>)
-    //     of all available board names. The corresponding method
-    //     createBoard(String name) must return a board for any of the
-    //     names in this list. Make sure that the new method that you create
-    //     here has a proper JavaDoc documentation.
-    //
-
+    /**
+     * Get all the available boards from the private boardNames list.
+     * 
+     * @return list of board names
+     * @author Sam Golpasand
+     */
     public List<String> getBoards() {
         return boardNames;
     }

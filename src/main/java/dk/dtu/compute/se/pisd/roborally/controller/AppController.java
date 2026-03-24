@@ -26,9 +26,6 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
-import dk.dtu.compute.se.pisd.roborally.dal.GameInDB;
-import dk.dtu.compute.se.pisd.roborally.dal.RepositoryAccess;
-import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
@@ -64,12 +61,12 @@ public class AppController implements Observer {
     }
 
     public void newGame() {
-        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
-        dialog.setTitle("Player number");
-        dialog.setHeaderText("Select number of players");
-        Optional<Integer> result = dialog.showAndWait();
+        ChoiceDialog<Integer> dialogPlayer = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
+        dialogPlayer.setTitle("Player number");
+        dialogPlayer.setHeaderText("Select number of players");
+        Optional<Integer> resultPlayer = dialogPlayer.showAndWait();
 
-        if (result.isPresent()) {
+        if (resultPlayer.isPresent()) {
             if (gameController != null) {
                 // The UI should not allow this, but in case this happens anyway.
                 // give the user the option to save the game or abort this operation!
@@ -78,35 +75,28 @@ public class AppController implements Observer {
                 }
             }
 
-            // DONE A6b: Use a user dialog here (similar to the one above
-            //     for player number) which lets the user select one of the
-            //     available boards, and then create the chosen board using
-            //     the BoardFactory (instead of creating an empty board).
 
             BoardFactory factory = BoardFactory.getInstance();
+            ChoiceDialog<String> dialogBoard = new ChoiceDialog<>(factory.getBoards().get(0), factory.getBoards());
+            dialogBoard.setTitle("Board type");
+            dialogBoard.setHeaderText("Select a type of board");
+            Optional<String> resultWall = dialogBoard.showAndWait();
 
-            ChoiceDialog<String> boardDialog = new ChoiceDialog<>(factory.getBoards().get(0), factory.getBoards());
-            boardDialog.setTitle("Board type");
-            boardDialog.setHeaderText("Select board type");
-            Optional<String> boardResult = boardDialog.showAndWait();
+            if (resultWall.isPresent()) {
 
-            if (boardResult.isPresent()) {
-
-                String boardName = boardResult.get();
-                // The code below just creates an empty board with the chosen
-                // number of players on it.
-                Board board = factory.createBoard(boardName);
+                String chosenBoardName = resultWall.get();
+                Board board = factory.createBoard(chosenBoardName);
                 gameController = new GameController(board);
-                int no = result.get();
+                int no = resultPlayer.get();
                 for (int i = 0; i < no; i++) {
                     Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
                     board.addPlayer(player);
                     player.setSpace(board.getSpace(i % board.width, i));
                 }
-            // XXX V2
-            gameController.startProgrammingPhase();
+                // XXX V2
+                gameController.startProgrammingPhase();
 
-            roboRally.createBoardView(gameController);
+                roboRally.createBoardView(gameController);
             }
 
         }
