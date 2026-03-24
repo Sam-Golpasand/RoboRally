@@ -77,7 +77,7 @@ public class AppController implements Observer {
 
 
             BoardFactory factory = BoardFactory.getInstance();
-            ChoiceDialog<String> dialogBoard = new ChoiceDialog<>(factory.getAvailableBoardNames().get(0), factory.getAvailableBoardNames());
+            ChoiceDialog<String> dialogBoard = new ChoiceDialog<>(factory.getBoards().get(0), factory.getBoards());
             dialogBoard.setTitle("Board type");
             dialogBoard.setHeaderText("Select a type of board");
             Optional<String> resultWall = dialogBoard.showAndWait();
