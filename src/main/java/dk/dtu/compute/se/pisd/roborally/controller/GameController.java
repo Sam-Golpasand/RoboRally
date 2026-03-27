@@ -224,7 +224,7 @@ public class GameController {
         }
     }
 
-    // TODO A6c: implement this method
+    // DONE A6c: implement this method
     public void moveForward(@NotNull Player player) {
         Heading heading = player.getHeading();
         Space from = player.getSpace();
@@ -234,11 +234,16 @@ public class GameController {
         if (to == null) {
             return;
         }
+        try {
+            moveToSpace(player, to, heading);
+        }
+        catch (ImpossibleMoveException e) {
+            return;
+        }
 
-        player.setSpace(to);
     }
 
-    // TODO A6c: implement this method
+    // DONE A6c: implement this method
     public void fastForward(@NotNull Player player) {
         moveForward(player);
         moveForward(player);
@@ -259,6 +264,8 @@ public class GameController {
         player.setHeading(playerHeading.prev());
     }
 
+    // DONE A6c: Add two methods for the new commands BACK and UTURN here.
+
     public void uTurn(@NotNull Player player) {
         turnLeft(player);
         turnLeft(player);
@@ -270,7 +277,20 @@ public class GameController {
         uTurn(player);
     }
 
-    // TODO A6c: Add two methods for the new commands BACK and UTURN here.
+    private void moveToSpace(@NotNull Player pusher, @NotNull Space space, @NotNull Heading heading)
+                                throws ImpossibleMoveException {
+        if (space.getPlayer() != null) {
+            Player beingPushed = space.getPlayer();
+            Space to = board.getNeighbour(space, heading);
+            if (to == null) {
+                throw new ImpossibleMoveException();
+            }
+            moveToSpace(beingPushed, to, heading);
+        }
+
+
+        pusher.setSpace(space);
+    }
 
     /**
      * A method called when no corresponding controller operation is implemented yet.
@@ -279,6 +299,10 @@ public class GameController {
     public void notImplemented() {
         // XXX just for now to indicate that the actual method is not yet implemented
         assert false;
+    }
+
+    public class ImpossibleMoveException extends Exception {
+
     }
 
 }
