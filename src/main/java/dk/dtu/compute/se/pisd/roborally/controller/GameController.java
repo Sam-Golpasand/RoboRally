@@ -158,7 +158,7 @@ public class GameController {
     }
 
     // XXX A6c
-    // TODO A6d: add the execution of the field actions at the right
+    // DONE A6d: add the execution of the field actions at the right
     //      place in this method
     // TODO A6e: implement the execution af an interactive card to
     //     this method (e.g. by switching to the PLAYER_INTERACTION phase
@@ -198,41 +198,14 @@ public class GameController {
     }
 
     /**
-     * Executes all field actions for each player currently on the board.
-     * Iterates through all players and processes the actions associated with the space
-     * each player is currently occupying.
-     *
-     * The execution of field actions depends on the type of the action:
-     * - If the action is a {@code ConveyorBelt}, the player is moved to the adjacent space
-     *   in the direction specified by the conveyor belt's heading, provided the target space
-     *   is not null and unoccupied.
-     * - If the action is a {@code Checkpoint}, the player's checkpoint count is updated if
-     *   the checkpoint's ID is the next consecutive checkpoint in the player's sequence.
-     *
-     * Field actions are skipped if preconditions for their application are not met
-     * (e.g., target space is occupied or invalid).
+     * Executes all field actions for the players on the board.
      */
     private void executeFieldActions() {
        List<Player> players = board.getPlayers();
        for (Player currentPlayer: players) {
            Space currentSpace = currentPlayer.getSpace();
            for (FieldAction fieldAction: currentSpace.getActions()) {
-               if (fieldAction instanceof ConveyorBelt) {
-                   Heading heading = ((ConveyorBelt) fieldAction).getHeading();
-                   Space targetSpace = board.getNeighbour(currentSpace, heading);
-                   if (targetSpace == null || targetSpace.getPlayer() != null) {
-                       continue;
-                   }
-                   currentPlayer.setSpace(targetSpace);
-               }
-               if (fieldAction instanceof Checkpoint) {
-                   Checkpoint currentCheckpoint = (Checkpoint) fieldAction;
-                   int currentCheckpointId = currentCheckpoint.getId();
-
-                   if (currentCheckpointId == currentPlayer.getCheckpointCount() + 1) {
-                       currentPlayer.setCheckpointCount(currentPlayer.getCheckpointCount() + 1);
-                   }
-               }
+               fieldAction.doAction(this, currentSpace);
            }
        }
     }

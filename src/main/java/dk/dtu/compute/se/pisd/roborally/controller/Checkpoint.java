@@ -22,6 +22,10 @@ public class Checkpoint extends FieldAction {
     @Override
     public boolean doAction(GameController gameController, Space space) {
         // TODO Auto-generated method stub
+        if (id == space.getPlayer().getCheckpointCount() + 1) {
+            space.getPlayer().setCheckpointCount(space.getPlayer().getCheckpointCount() + 1);
+            return true;
+        }
         return false;
     }
 }
