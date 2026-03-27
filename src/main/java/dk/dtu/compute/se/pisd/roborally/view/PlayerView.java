@@ -64,6 +64,8 @@ public class PlayerView extends Tab implements ViewObserver {
 
     private GameController gameController;
 
+    private Label statusLabel;
+
     public PlayerView(@NotNull GameController gameController, @NotNull Player player) {
         super(player.getName());
         this.setStyle("-fx-text-base-color: " + player.getColor() + ";");
@@ -130,8 +132,11 @@ public class PlayerView extends Tab implements ViewObserver {
         top.getChildren().add(cardsLabel);
         top.getChildren().add(cardsPane);
 
-        // TODO A6d: a label for the status of this player could be added here
+        // DONE A6d: a label for the status of this player could be added here
         //     for showing the number of achieved checkpoints (etc).
+        
+        statusLabel = new Label("Checkpoints achieved: " + player.getCheckpointCount());
+        top.getChildren().add(statusLabel);
 
         if (player.board != null) {
             player.board.attach(this);
@@ -142,8 +147,9 @@ public class PlayerView extends Tab implements ViewObserver {
     @Override
     public void updateView(Subject subject) {
         if (subject == player.board) {
-            // TODO A6d: update the status label for this player (showing the number
+            // DONE A6d: update the status label for this player (showing the number
             //     of achieved checkpoints)
+            statusLabel.setText("Checkpoints achieved: " + player.getCheckpointCount());
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];
                 if (cardFieldView != null) {
