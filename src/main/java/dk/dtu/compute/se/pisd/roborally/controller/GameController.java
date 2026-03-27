@@ -199,6 +199,8 @@ public class GameController {
 
     /**
      * Executes all field actions for the players on the board.
+     *
+     * @author Magnus Dragheim
      */
     private void executeFieldActions() {
        List<Player> players = board.getPlayers();
@@ -243,6 +245,14 @@ public class GameController {
     }
 
     // DONE A6c: implement this method
+
+    /**
+     * Moves the specified player one space forward in the direction they are currently facing.
+     * If the target space is invalid (e.g., off the board), the player remains in their current position.
+     * If the target space is unreachable due to an exceptional scenario, the move is aborted.
+     *
+     * @param player the player to move forward; must not be null
+     */
     public void moveForward(@NotNull Player player) {
         Heading heading = player.getHeading();
         Space from = player.getSpace();
@@ -262,6 +272,14 @@ public class GameController {
     }
 
     // DONE A6c: implement this method
+
+    /**
+     * Moves the specified player two spaces forward in their current heading
+     * direction. This method calls the {@code moveForward} method twice to
+     * achieve the effect of a double forward motion.
+     *
+     * @param player the player to move forward; must not be null
+     */
     public void fastForward(@NotNull Player player) {
         moveForward(player);
         moveForward(player);
@@ -269,6 +287,13 @@ public class GameController {
     }
 
     // DONE A6c: implement this method
+
+    /**
+     * Turns the specified player 90 degrees to the right, changing their heading
+     * to the next value in the circular sequence of headings defined by the Heading enum.
+     *
+     * @param player the player to turn right; must not be null
+     */
     public void turnRight(@NotNull Player player) {
 
         Heading playerHeading = player.getHeading();
@@ -276,6 +301,13 @@ public class GameController {
     }
 
     // DONE A6c: implement this method
+
+    /**
+     * Turns the specified player 90 degrees to the left, changing their heading
+     * to the previous value in the circular sequence of headings defined by the Heading enum.
+     *
+     * @param player the player to turn left; must not be null
+     */
     public void turnLeft(@NotNull Player player) {
 
         Heading playerHeading = player.getHeading();
@@ -284,11 +316,25 @@ public class GameController {
 
     // DONE A6c: Add two methods for the new commands BACK and UTURN here.
 
+    /**
+     * Executes a U-turn for the specified player. A U-turn involves the player
+     * turning 180 degrees by performing two consecutive left turns.
+     *
+     * @param player the player who will perform the U-turn; must not be null
+     */
     public void uTurn(@NotNull Player player) {
         turnLeft(player);
         turnLeft(player);
     }
 
+    /**
+     * Moves the given player backward by executing a sequence of operations
+     * that simulates a reverse motion. The player performs a U-turn, moves
+     * forward in the new direction, and performs a final U-turn to restore
+     * their original heading.
+     *
+     * @param player the player to be moved backward; must not be null
+     */
     public void back(@NotNull Player player) {
         uTurn(player);
         moveForward(player);

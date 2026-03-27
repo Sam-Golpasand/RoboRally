@@ -19,6 +19,16 @@ public class Checkpoint extends FieldAction {
         this.id = id;
     }
 
+    /**
+     * Executes the action associated with a specific checkpoint in the game.
+     * This method checks whether the player has reached the next checkpoint in sequence
+     * and updates the player's checkpoint count accordingly.
+     *
+     * @param gameController the controller managing the game logic and state
+     * @param space the current space on the board where the action is being executed
+     * @return true if the checkpoint count was successfully updated, false otherwise
+     * @author Magnus Dragheim
+     */
     @Override
     public boolean doAction(GameController gameController, Space space) {
         // TODO Auto-generated method stub
