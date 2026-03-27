@@ -235,13 +235,6 @@ public class GameController {
             return;
         }
 
-        Space toFrom = board.getNeighbour(to, heading.next().next());
-
-        // simple rule: cannot move into occupied space
-        if (toFrom == null) {
-            return;
-        }
-
         player.setSpace(to);
     }
 
@@ -272,16 +265,9 @@ public class GameController {
     }
 
     public void back(@NotNull Player player) {
-        Heading heading = player.getHeading();
-        Space from = player.getSpace();
-        Space to = board.getNeighbour(from, heading.next().next());
-
-        // off-board: do nothing (or handle as fall/death later)
-        if (to == null) {
-            return;
-        }
-
-        player.setSpace(to);
+        uTurn(player);
+        moveForward(player);
+        uTurn(player);
     }
 
     // TODO A6c: Add two methods for the new commands BACK and UTURN here.
