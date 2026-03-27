@@ -92,7 +92,7 @@ public class PlayerView extends Tab implements ViewObserver {
         //       players, but on the PlayersView (view for all players). This should be
         //       refactored.
 
-        // TODO A6c: the following buttons should be associated with the proper methods
+        // DONE A6c: the following buttons should be associated with the proper methods
         //          in the game controller
 
         finishButton = new Button("Finish Programming");

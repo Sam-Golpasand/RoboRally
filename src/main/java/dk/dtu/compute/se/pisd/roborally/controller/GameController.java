@@ -22,7 +22,11 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * ...
@@ -173,6 +177,7 @@ public class GameController {
                 if (nextPlayerNumber < board.getPlayersNumber()) {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                 } else {
+                    executeFieldActions();
                     step++;
                     if (step < Player.NO_REGISTERS) {
                         makeProgramFieldsVisible(step);
@@ -190,6 +195,46 @@ public class GameController {
             // this should not happen
             assert false;
         }
+    }
+
+    /**
+     * Executes all field actions for each player currently on the board.
+     * Iterates through all players and processes the actions associated with the space
+     * each player is currently occupying.
+     *
+     * The execution of field actions depends on the type of the action:
+     * - If the action is a {@code ConveyorBelt}, the player is moved to the adjacent space
+     *   in the direction specified by the conveyor belt's heading, provided the target space
+     *   is not null and unoccupied.
+     * - If the action is a {@code Checkpoint}, the player's checkpoint count is updated if
+     *   the checkpoint's ID is the next consecutive checkpoint in the player's sequence.
+     *
+     * Field actions are skipped if preconditions for their application are not met
+     * (e.g., target space is occupied or invalid).
+     */
+    private void executeFieldActions() {
+       List<Player> players = board.getPlayers();
+       for (Player currentPlayer: players) {
+           Space currentSpace = currentPlayer.getSpace();
+           for (FieldAction fieldAction: currentSpace.getActions()) {
+               if (fieldAction instanceof ConveyorBelt) {
+                   Heading heading = ((ConveyorBelt) fieldAction).getHeading();
+                   Space targetSpace = board.getNeighbour(currentSpace, heading);
+                   if (targetSpace == null || targetSpace.getPlayer() != null) {
+                       continue;
+                   }
+                   currentPlayer.setSpace(targetSpace);
+               }
+               if (fieldAction instanceof Checkpoint) {
+                   Checkpoint currentCheckpoint = (Checkpoint) fieldAction;
+                   int currentCheckpointId = currentCheckpoint.getId();
+
+                   if (currentCheckpointId == currentPlayer.getCheckpointCount() + 1) {
+                       currentPlayer.setCheckpointCount(currentPlayer.getCheckpointCount() + 1);
+                   }
+               }
+           }
+       }
     }
 
     // XXX A6c
@@ -277,6 +322,16 @@ public class GameController {
         uTurn(player);
     }
 
+    /**
+     * Moves a player to a specified space on the board. If the target space is
+     * occupied by another player, the occupying player is pushed to an adjacent
+     * space in the same direction. If pushing is not possible, an exception is thrown.
+     *
+     * @param pusher the player who is moving into the target space
+     * @param space the target space to which the player is moving
+     * @param heading the direction in which the player is pushing if the target space is occupied
+     * @throws ImpossibleMoveException if the move or push cannot be completed
+     */
     private void moveToSpace(@NotNull Player pusher, @NotNull Space space, @NotNull Heading heading)
                                 throws ImpossibleMoveException {
         if (space.getPlayer() != null) {
