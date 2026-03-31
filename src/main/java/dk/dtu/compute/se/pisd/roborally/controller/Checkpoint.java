@@ -1,5 +1,6 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 
 /**
@@ -21,7 +22,20 @@ public class Checkpoint extends FieldAction {
 
     @Override
     public boolean doAction(GameController gameController, Space space) {
-        // TODO Auto-generated method stub
-        return false;
+        
+        Player player = space.getPlayer();
+
+        if (player == null) {
+            return false;
+        }
+
+        // Check if the checkpoint reached is the one before this checkpoint.
+        if (player.getCheckpointsReached() + 1 == this.id) {
+            player.setCheckpointsReached(id);
+        } else {
+            return false;
+        }
+        
+        return true;
     }
 }

@@ -52,8 +52,8 @@ public class ConveyorBelt extends FieldAction {
      */
     @Override
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
-        // TODO A6d: needs to be implemented
-        // ...
+
+        
 
         return false;
     }

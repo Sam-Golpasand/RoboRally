@@ -224,6 +224,24 @@ public class GameController {
         }
     }
 
+    public void move(@NotNull Player player, Heading heading) {
+        Space from = player.getSpace();
+        Space to = board.getNeighbour(from, heading);
+
+        // off-board: do nothing (or handle as fall/death later)
+        if (to == null) {
+            return;
+        }
+
+        Space toFrom = board.getNeighbour(to, heading.next().next());
+
+        // simple rule: cannot move into occupied space
+        if (toFrom == null) {
+            return;
+        }
+
+        player.setSpace(to);
+    }
     // TODO A6c: implement this method
     public void moveForward(@NotNull Player player) {
         Heading heading = player.getHeading();
