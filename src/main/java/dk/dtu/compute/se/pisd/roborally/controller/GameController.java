@@ -22,7 +22,11 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * ...
@@ -154,7 +158,7 @@ public class GameController {
     }
 
     // XXX A6c
-    // TODO A6d: add the execution of the field actions at the right
+    // DONE A6d: add the execution of the field actions at the right
     //      place in this method
     // TODO A6e: implement the execution af an interactive card to
     //     this method (e.g. by switching to the PLAYER_INTERACTION phase
@@ -173,6 +177,7 @@ public class GameController {
                 if (nextPlayerNumber < board.getPlayersNumber()) {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                 } else {
+                    executeFieldActions();
                     step++;
                     if (step < Player.NO_REGISTERS) {
                         makeProgramFieldsVisible(step);
@@ -190,6 +195,21 @@ public class GameController {
             // this should not happen
             assert false;
         }
+    }
+
+    /**
+     * Executes all field actions for the players on the board.
+     *
+     * @author Magnus Dragheim
+     */
+    private void executeFieldActions() {
+       List<Player> players = board.getPlayers();
+       for (Player currentPlayer: players) {
+           Space currentSpace = currentPlayer.getSpace();
+           for (FieldAction fieldAction: currentSpace.getActions()) {
+               fieldAction.doAction(this, currentSpace);
+           }
+       }
     }
 
     // XXX A6c
@@ -224,25 +244,15 @@ public class GameController {
         }
     }
 
-    public void move(@NotNull Player player, Heading heading) {
-        Space from = player.getSpace();
-        Space to = board.getNeighbour(from, heading);
+    // DONE A6c: implement this method
 
-        // off-board: do nothing (or handle as fall/death later)
-        if (to == null) {
-            return;
-        }
-
-        Space toFrom = board.getNeighbour(to, heading.next().next());
-
-        // simple rule: cannot move into occupied space
-        if (toFrom == null) {
-            return;
-        }
-
-        player.setSpace(to);
-    }
-    // TODO A6c: implement this method
+    /**
+     * Moves the specified player one space forward in the direction they are currently facing.
+     * If the target space is invalid (e.g., off the board), the player remains in their current position.
+     * If the target space is unreachable due to an exceptional scenario, the move is aborted.
+     *
+     * @param player the player to move forward; must not be null
+     */
     public void moveForward(@NotNull Player player) {
         Heading heading = player.getHeading();
         Space from = player.getSpace();
@@ -252,18 +262,24 @@ public class GameController {
         if (to == null) {
             return;
         }
-
-        Space toFrom = board.getNeighbour(to, heading.next().next());
-
-        // simple rule: cannot move into occupied space
-        if (toFrom == null) {
+        try {
+            moveToSpace(player, to, heading);
+        }
+        catch (ImpossibleMoveException e) {
             return;
         }
 
-        player.setSpace(to);
     }
 
-    // TODO A6c: implement this method
+    // DONE A6c: implement this method
+
+    /**
+     * Moves the specified player two spaces forward in their current heading
+     * direction. This method calls the {@code moveForward} method twice to
+     * achieve the effect of a double forward motion.
+     *
+     * @param player the player to move forward; must not be null
+     */
     public void fastForward(@NotNull Player player) {
         moveForward(player);
         moveForward(player);
@@ -271,6 +287,13 @@ public class GameController {
     }
 
     // DONE A6c: implement this method
+
+    /**
+     * Turns the specified player 90 degrees to the right, changing their heading
+     * to the next value in the circular sequence of headings defined by the Heading enum.
+     *
+     * @param player the player to turn right; must not be null
+     */
     public void turnRight(@NotNull Player player) {
 
         Heading playerHeading = player.getHeading();
@@ -278,31 +301,70 @@ public class GameController {
     }
 
     // DONE A6c: implement this method
+
+    /**
+     * Turns the specified player 90 degrees to the left, changing their heading
+     * to the previous value in the circular sequence of headings defined by the Heading enum.
+     *
+     * @param player the player to turn left; must not be null
+     */
     public void turnLeft(@NotNull Player player) {
 
         Heading playerHeading = player.getHeading();
         player.setHeading(playerHeading.prev());
     }
 
+    // DONE A6c: Add two methods for the new commands BACK and UTURN here.
+
+    /**
+     * Executes a U-turn for the specified player. A U-turn involves the player
+     * turning 180 degrees by performing two consecutive left turns.
+     *
+     * @param player the player who will perform the U-turn; must not be null
+     */
     public void uTurn(@NotNull Player player) {
         turnLeft(player);
         turnLeft(player);
     }
 
+    /**
+     * Moves the given player backward by executing a sequence of operations
+     * that simulates a reverse motion. The player performs a U-turn, moves
+     * forward in the new direction, and performs a final U-turn to restore
+     * their original heading.
+     *
+     * @param player the player to be moved backward; must not be null
+     */
     public void back(@NotNull Player player) {
-        Heading heading = player.getHeading();
-        Space from = player.getSpace();
-        Space to = board.getNeighbour(from, heading.next().next());
-
-        // off-board: do nothing (or handle as fall/death later)
-        if (to == null) {
-            return;
-        }
-
-        player.setSpace(to);
+        uTurn(player);
+        moveForward(player);
+        uTurn(player);
     }
 
-    // TODO A6c: Add two methods for the new commands BACK and UTURN here.
+    /**
+     * Moves a player to a specified space on the board. If the target space is
+     * occupied by another player, the occupying player is pushed to an adjacent
+     * space in the same direction. If pushing is not possible, an exception is thrown.
+     *
+     * @param pusher the player who is moving into the target space
+     * @param space the target space to which the player is moving
+     * @param heading the direction in which the player is pushing if the target space is occupied
+     * @throws ImpossibleMoveException if the move or push cannot be completed
+     */
+    private void moveToSpace(@NotNull Player pusher, @NotNull Space space, @NotNull Heading heading)
+                                throws ImpossibleMoveException {
+        if (space.getPlayer() != null) {
+            Player beingPushed = space.getPlayer();
+            Space to = board.getNeighbour(space, heading);
+            if (to == null) {
+                throw new ImpossibleMoveException();
+            }
+            moveToSpace(beingPushed, to, heading);
+        }
+
+
+        pusher.setSpace(space);
+    }
 
     /**
      * A method called when no corresponding controller operation is implemented yet.
@@ -311,6 +373,10 @@ public class GameController {
     public void notImplemented() {
         // XXX just for now to indicate that the actual method is not yet implemented
         assert false;
+    }
+
+    public class ImpossibleMoveException extends Exception {
+
     }
 
 }

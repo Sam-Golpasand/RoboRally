@@ -115,6 +115,16 @@ public class BoardFactory {
         action.setHeading(Heading.WEST);
         space.getActions().add(action);
 
+        space = board.getSpace(3,7);
+        Checkpoint actionCheckpoint = new Checkpoint();
+        actionCheckpoint.setId(1);
+        space.getActions().add(actionCheckpoint);
+
+        space = board.getSpace(4,5);
+        actionCheckpoint = new Checkpoint();
+        actionCheckpoint.setId(2);
+        space.getActions().add(actionCheckpoint);
+
         return board;
     }
 
@@ -159,6 +169,22 @@ public class BoardFactory {
         action  = new ConveyorBelt();
         action.setHeading(Heading.WEST);
         space.getActions().add(action);
+
+        space = board.getSpace(3,7);
+        Checkpoint actionCheckpoint = new Checkpoint();
+        actionCheckpoint.setId(1);
+        space.getActions().add(actionCheckpoint);
+
+        space = board.getSpace(4,5);
+        actionCheckpoint = new Checkpoint();
+        actionCheckpoint.setId(2);
+        space.getActions().add(actionCheckpoint);
+
+        space = board.getSpace(10,9);
+        actionCheckpoint = new Checkpoint();
+        actionCheckpoint.setId(3);
+        space.getActions().add(actionCheckpoint);
+
 
         return board;
     }

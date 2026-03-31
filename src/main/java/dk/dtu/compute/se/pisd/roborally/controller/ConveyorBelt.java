@@ -48,14 +48,25 @@ public class ConveyorBelt extends FieldAction {
     }
 
     /**
-     * Implementation of the action of a conveyor belt. Needs to be implemented for A3.
+     * Executes an action on the specified space using the provided game controller.
+     * The action involves moving a player from the current space to a target space
+     * determined by the conveyor belt's heading, if the target space is valid.
+     *
+     * @param gameController the game controller managing the game state
+     * @param space the current space where the action is initiated
+     * @return true if the player is successfully moved to the target space, false otherwise
+     * @author Magnus Dragheim
      */
     @Override
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
-
-        
-
-        return false;
+        // DONE A6d: needs to be implemented
+        // ...
+        Space targetSpace = gameController.board.getNeighbour(space, heading);
+        if (targetSpace == null || targetSpace.getPlayer() != null) {
+            return false;
+        }
+        space.getPlayer().setSpace(targetSpace);
+        return true;
     }
 
 }
