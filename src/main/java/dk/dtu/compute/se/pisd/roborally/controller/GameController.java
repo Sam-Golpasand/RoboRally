@@ -22,8 +22,6 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -204,12 +202,14 @@ public class GameController {
      */
     private void executeFieldActions() {
        List<Player> players = board.getPlayers();
-       for (Player currentPlayer: players) {
-           Space currentSpace = currentPlayer.getSpace();
+       
+       for (int i = 0; i < players.size(); i++) {
+           Space currentSpace = players.get(i).getSpace();
+           
            for (FieldAction fieldAction: currentSpace.getActions()) {
                fieldAction.doAction(this, currentSpace);
            }
-       }
+        }
     }
 
     // XXX A6c
@@ -258,14 +258,10 @@ public class GameController {
         Space from = player.getSpace();
         Space to = board.getNeighbour(from, heading);
 
-        // off-board: do nothing (or handle as fall/death later)
-        if (to == null) {
-            return;
-        }
+
         try {
             moveToSpace(player, to, heading);
-        }
-        catch (ImpossibleMoveException e) {
+        } catch (ImpossibleMoveException e) {
             return;
         }
 
@@ -351,17 +347,17 @@ public class GameController {
      * @param heading the direction in which the player is pushing if the target space is occupied
      * @throws ImpossibleMoveException if the move or push cannot be completed
      */
-    private void moveToSpace(@NotNull Player pusher, @NotNull Space space, @NotNull Heading heading)
-                                throws ImpossibleMoveException {
+    private void moveToSpace(@NotNull Player pusher, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
         if (space.getPlayer() != null) {
             Player beingPushed = space.getPlayer();
             Space to = board.getNeighbour(space, heading);
+
             if (to == null) {
                 throw new ImpossibleMoveException();
             }
+            
             moveToSpace(beingPushed, to, heading);
         }
-
 
         pusher.setSpace(space);
     }
@@ -375,8 +371,6 @@ public class GameController {
         assert false;
     }
 
-    public class ImpossibleMoveException extends Exception {
-
-    }
+    public class ImpossibleMoveException extends Exception {}
 
 }
