@@ -27,10 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dk.dtu.compute.se.pisd.roborally.model.Heading.EAST;
-import static dk.dtu.compute.se.pisd.roborally.model.Heading.NORTH;
-import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
-import static dk.dtu.compute.se.pisd.roborally.model.Heading.WEST;
+
 import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
 
 /**
