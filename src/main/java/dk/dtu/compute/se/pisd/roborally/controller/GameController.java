@@ -202,12 +202,14 @@ public class GameController {
      */
     private void executeFieldActions() {
        List<Player> players = board.getPlayers();
-       for (Player currentPlayer: players) {
-           Space currentSpace = currentPlayer.getSpace();
+       
+       for (int i = 0; i < players.size(); i++) {
+           Space currentSpace = players.get(i).getSpace();
+           
            for (FieldAction fieldAction: currentSpace.getActions()) {
                fieldAction.doAction(this, currentSpace);
            }
-       }
+        }
     }
 
     // XXX A6c

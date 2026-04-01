@@ -267,12 +267,12 @@ public class Board extends Subject {
         // the students, this method gives a string representation of the current
         // status of the game
 
-
-
         // DONE A6c: changed the status so that it shows the phase, the current player, and the current register
         //     and you can remove the move count status message message and the corresponding counter again
         // TODO A6e: add something to the status message, when a player has won the game
+
         String currentPlayer = (getCurrentPlayer() != null) ? getCurrentPlayer().getName() : "no current player";
+
         return "Player = " + currentPlayer + ", Phase = " + phase.name().toLowerCase() + ", Register = " + step;
     }
 
