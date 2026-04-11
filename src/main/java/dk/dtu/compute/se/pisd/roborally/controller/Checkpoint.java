@@ -12,12 +12,22 @@ public class Checkpoint extends FieldAction {
 
     private int id;
 
+    private boolean isLastCheckpoint = false;
+
     public int getId() {
         return id;
     }  
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean getIsLastCheckpoint() {
+        return isLastCheckpoint;
+    }
+
+    public void setIsLastCheckpoint(boolean lastCheckpoint) {
+        isLastCheckpoint = lastCheckpoint;
     }
 
     /**
@@ -36,6 +46,9 @@ public class Checkpoint extends FieldAction {
 
         if (id == player.getCheckpointCount() + 1) {
             player.setCheckpointCount(player.getCheckpointCount() + 1);
+            if (isLastCheckpoint) {
+                player.setHasWon(true);
+            }
             return true;
         }
         

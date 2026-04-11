@@ -204,10 +204,14 @@ public class GameController {
        List<Player> players = board.getPlayers();
        
        for (int i = 0; i < players.size(); i++) {
-           Space currentSpace = players.get(i).getSpace();
+           Player currentPlayer = players.get(i);
+           Space currentSpace = currentPlayer.getSpace();
            
            for (FieldAction fieldAction: currentSpace.getActions()) {
                fieldAction.doAction(this, currentSpace);
+           }
+           if (currentPlayer.getHasWon()) {
+               board.setPhase(Phase.FINISHED);
            }
         }
     }

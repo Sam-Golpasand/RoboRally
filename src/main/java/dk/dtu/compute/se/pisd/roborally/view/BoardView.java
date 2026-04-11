@@ -25,8 +25,10 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -51,6 +53,8 @@ public class BoardView extends VBox implements ViewObserver {
     private Label statusLabel;
 
     private SpaceEventHandler spaceEventHandler;
+
+    private boolean hasNotifiedWin = false;
 
     public BoardView(@NotNull GameController gameController) {
         board = gameController.board;
@@ -86,6 +90,29 @@ public class BoardView extends VBox implements ViewObserver {
         if (subject == board) {
             Phase phase = board.getPhase();
             statusLabel.setText(board.getStatusMessage());
+
+            // here is the logic for the pop up, if there is a winner
+            if (phase == Phase.FINISHED && !hasNotifiedWin) {
+                // here we can find if there is a winning player
+                Player winner = null;
+                for (Player p : board.getPlayers()) {
+                    if (p.getHasWon()) {
+                        winner = p;
+                        break;
+                    }
+                }
+
+                if (winner != null) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Game Over");
+                    alert.setHeaderText("We have a winner!");
+
+                    // here we show who won
+                    alert.setContentText(winner.getName() + " has won this game!\n");
+                    hasNotifiedWin = true;
+                    alert.showAndWait();
+                }
+            }
         }
     }
 

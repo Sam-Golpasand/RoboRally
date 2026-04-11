@@ -54,7 +54,7 @@ public enum Command {
     //     BACK and UTURN, and implement the corresponding command in the
     //     vlass GameController)
 
-    // DONE A6e: add two new commands  here, which are interactive,
+    // DONE A6e: add two new commands here, which are interactive,
     //     which means that the player can chose between two options when
     //     the command is executed.
 
