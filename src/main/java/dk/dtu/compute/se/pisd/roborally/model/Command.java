@@ -46,8 +46,7 @@ public enum Command {
     FAST_FORWARD("Fast Fwd"),
     BACK("Back"),
     U_TURN("U-Turn"),
-    LEFT_OR_RIGHT("Left or Right", LEFT, RIGHT),
-    FORWARD_OR_BACK("Forward or Back", FORWARD, BACK);
+    LEFT_OR_RIGHT("Left or Right", LEFT, RIGHT);
 
 
     // DONE A6c: add new literals to this enumeration for the two commands

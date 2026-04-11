@@ -148,27 +148,51 @@ public class GameController {
         continuePrograms();
     }
 
+    /**
+     * Handles the interaction phase by executing the next step based on the provided command
+     * and continuing program execution if the system is not in step mode.
+     *
+     * @param choice the command representing the player's chosen action; must not be null
+     */
+    public void interact(Command choice) {
+        executeNextStep(choice); // Pass the choice to the step execution
+        if (!board.isStepMode()) {
+            continuePrograms();  // Resume full execution if not in step mode
+        }
+    }
+
     // XXX A6c
     private void continuePrograms() {
         do {
-            executeNextStep();
+            executeNextStep(null);
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
 
     // XXX A6c
     // DONE A6d: add the execution of the field actions at the right
     //      place in this method
-    // TODO A6e: implement the execution af an interactive card to
+    // DONE A6e: implement the execution af an interactive card to
     //     this method (e.g. by switching to the PLAYER_INTERACTION phase
     //     at the right point)
-    private void executeNextStep() {
+    private void executeNextStep(Command choice) {
         Player currentPlayer = board.getCurrentPlayer();
-        if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
+        if ((board.getPhase() == Phase.ACTIVATION || board.getPhase() == Phase.PLAYER_INTERACTION) && currentPlayer != null) {
             int step = board.getStep();
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
                     Command command = card.command;
+                    if (command == Command.LEFT_OR_RIGHT) {
+                        if (choice == null) {
+                            // there has been no choice made yet, change phase and stop the loop
+                            board.setPhase(Phase.PLAYER_INTERACTION);
+                            return;
+                        } else {
+                            // choice has been made, override the command and switch phase back
+                            command = choice;
+                            board.setPhase(Phase.ACTIVATION);
+                        }
+                    }
                     executeCommand(currentPlayer, command);
                 }
                 int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
