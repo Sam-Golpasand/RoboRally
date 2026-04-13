@@ -6,6 +6,8 @@ import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,22 +19,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GameControllerTest {
 
-    private GameController createControllerWithPlayers(int width, int height, int playerCount) {
-        Board board = new Board(width, height);
-        GameController controller = new GameController(board);
+    private final int TEST_WIDTH = 8;
+    private final int TEST_HEIGHT = 8;
 
-        for (int i = 0; i < playerCount; i++) {
+    private GameController gameController;
+
+    @BeforeEach
+    void setUp() {
+        Board board = new Board(TEST_WIDTH, TEST_HEIGHT);
+        gameController = new GameController(board);
+        for (int i = 0; i < 6; i++) {
             Player player = new Player(board, null, "Player " + i);
             board.addPlayer(player);
-            player.setSpace(board.getSpace(i % width, i / width));
-            player.setHeading(Heading.EAST);
+            player.setSpace(board.getSpace(i, i));
+            player.setHeading(Heading.values()[i % Heading.values().length]);
         }
 
-        if (playerCount > 0) {
-            board.setCurrentPlayer(board.getPlayer(0));
-        }
+        board.setCurrentPlayer(board.getPlayer(0));
+    }
 
-        return controller;
+    @AfterEach
+    void tearDown() {
+        gameController = null;
     }
 
     private void prepareActivation(Board board) {
@@ -47,7 +55,6 @@ class GameControllerTest {
 
     @Test
     void startProgrammingPhaseInitializesProgramAndCardFields() {
-        GameController gameController = createControllerWithPlayers(6, 6, 2);
         Board board = gameController.board;
 
         gameController.startProgrammingPhase();
@@ -73,7 +80,6 @@ class GameControllerTest {
 
     @Test
     void finishProgrammingPhaseHidesRegistersExceptCurrent() {
-        GameController gameController = createControllerWithPlayers(6, 6, 2);
         Board board = gameController.board;
         gameController.startProgrammingPhase();
 
@@ -94,7 +100,6 @@ class GameControllerTest {
 
     @Test
     void moveForwardPushesPlayerWhenSpaceOccupied() {
-        GameController gameController = createControllerWithPlayers(6, 6, 2);
         Board board = gameController.board;
         Player pusher = board.getPlayer(0);
         Player pushed = board.getPlayer(1);
@@ -110,7 +115,6 @@ class GameControllerTest {
 
     @Test
     void moveForwardStopsWhenPushIsImpossible() {
-        GameController gameController = createControllerWithPlayers(6, 6, 2);
         Board board = gameController.board;
         Player pusher = board.getPlayer(0);
         Player pushed = board.getPlayer(1);
@@ -127,7 +131,6 @@ class GameControllerTest {
 
     @Test
     void executeStepWithInteractiveCardEntersPlayerInteraction() {
-        GameController gameController = createControllerWithPlayers(6, 6, 1);
         Board board = gameController.board;
         Player player = board.getPlayer(0);
         setRegister0(player, Command.LEFT_OR_RIGHT);
@@ -143,7 +146,6 @@ class GameControllerTest {
 
     @Test
     void interactWithChoiceExecutesAndSkipsContinuationInStepMode() {
-        GameController gameController = createControllerWithPlayers(6, 6, 1);
         Board board = gameController.board;
         Player player = board.getPlayer(0);
         player.setHeading(Heading.NORTH);
@@ -154,13 +156,13 @@ class GameControllerTest {
         gameController.interact(Command.LEFT);
 
         assertEquals(Phase.ACTIVATION, board.getPhase());
-        assertEquals(1, board.getStep());
+        assertEquals(0, board.getStep());
+        assertSame(board.getPlayer(1), board.getCurrentPlayer());
         assertEquals(Heading.WEST, player.getHeading());
     }
 
     @Test
     void interactWithChoiceContinuesWhenNotInStepMode() {
-        GameController gameController = createControllerWithPlayers(6, 6, 1);
         Board board = gameController.board;
         Player player = board.getPlayer(0);
         player.setHeading(Heading.NORTH);
@@ -176,7 +178,6 @@ class GameControllerTest {
 
     @Test
     void executeProgramsRunsToNextProgrammingPhase() {
-        GameController gameController = createControllerWithPlayers(6, 6, 1);
         Board board = gameController.board;
 
         prepareActivation(board);
@@ -194,7 +195,6 @@ class GameControllerTest {
 
     @Test
     void executeStepMovesControlToNextPlayer() {
-        GameController gameController = createControllerWithPlayers(6, 6, 2);
         Board board = gameController.board;
         Player player0 = board.getPlayer(0);
         Player player1 = board.getPlayer(1);
@@ -211,15 +211,15 @@ class GameControllerTest {
 
     @Test
     void executeStepTriggersFinishedPhaseWhenFieldActionWins() {
-        GameController gameController = createControllerWithPlayers(6, 6, 1);
         Board board = gameController.board;
-        Player player = board.getPlayer(0);
+        Player player = board.getPlayer(board.getPlayersNumber() - 1);
         Checkpoint checkpoint = new Checkpoint();
         checkpoint.setId(1);
         checkpoint.setIsLastCheckpoint(true);
         player.getSpace().getActions().add(checkpoint);
 
         prepareActivation(board);
+        board.setCurrentPlayer(player);
         gameController.executeStep();
 
         assertEquals(Phase.FINISHED, board.getPhase());
@@ -229,6 +229,7 @@ class GameControllerTest {
 
     @Test
     void executeStepCoversAllDirectCommandCards() {
+        Board board = gameController.board;
         Command[] commands = {
                 Command.FORWARD,
                 Command.RIGHT,
@@ -239,9 +240,10 @@ class GameControllerTest {
         };
 
         for (Command command : commands) {
-            GameController gameController = createControllerWithPlayers(6, 6, 1);
-            Board board = gameController.board;
             Player player = board.getPlayer(0);
+            for (int i = 0; i < board.getPlayersNumber(); i++) {
+                board.getPlayer(i).getProgramField(0).setCard(null);
+            }
             player.setSpace(board.getSpace(0, 0));
             player.setHeading(Heading.EAST);
             setRegister0(player, command);
@@ -279,8 +281,8 @@ class GameControllerTest {
             }
 
             assertEquals(Phase.ACTIVATION, board.getPhase());
-            assertEquals(1, board.getStep());
-            assertSame(board.getPlayer(0), board.getCurrentPlayer());
+            assertEquals(0, board.getStep());
+            assertSame(board.getPlayer(1), board.getCurrentPlayer());
         }
     }
 
