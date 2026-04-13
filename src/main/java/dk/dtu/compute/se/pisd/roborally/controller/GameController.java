@@ -199,6 +199,11 @@ public class GameController {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                 } else {
                     executeFieldActions();
+
+                    if (board.getPhase() != Phase.ACTIVATION) {
+                        return;
+                    }
+
                     step++;
                     if (step < Player.NO_REGISTERS) {
                         makeProgramFieldsVisible(step);
@@ -232,9 +237,14 @@ public class GameController {
            
            for (FieldAction fieldAction: currentSpace.getActions()) {
                fieldAction.doAction(this, currentSpace);
+               if (currentPlayer.getHasWon()) {
+                   board.setPhase(Phase.FINISHED);
+                   return;
+               }
            }
            if (currentPlayer.getHasWon()) {
                board.setPhase(Phase.FINISHED);
+               return;
            }
         }
     }
@@ -289,6 +299,10 @@ public class GameController {
         Heading heading = player.getHeading();
         Space from = player.getSpace();
         Space to = board.getNeighbour(from, heading);
+
+        if (to == null) {
+            return;
+        }
 
 
         try {

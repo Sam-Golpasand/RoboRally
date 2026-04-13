@@ -130,6 +130,48 @@ class GameControllerTest {
     }
 
     @Test
+    void moveForwardStopsWhenWallBlocksDirectMove() {
+        Board board = gameController.board;
+        Player player = board.getPlayer(0);
+        player.setSpace(board.getSpace(0, 0));
+        player.setHeading(Heading.EAST);
+        board.getSpace(0, 0).getWalls().add(Heading.EAST);
+
+        gameController.moveForward(player);
+
+        assertSame(board.getSpace(0, 0), player.getSpace());
+        assertEquals(Heading.EAST, player.getHeading());
+    }
+
+    @Test
+    void fastForwardStopsAtBlockingWallOnSecondMove() {
+        Board board = gameController.board;
+        Player player = board.getPlayer(0);
+        player.setSpace(board.getSpace(0, 0));
+        player.setHeading(Heading.EAST);
+        board.getSpace(1, 0).getWalls().add(Heading.EAST);
+
+        gameController.fastForward(player);
+
+        assertSame(board.getSpace(1, 0), player.getSpace());
+        assertEquals(Heading.EAST, player.getHeading());
+    }
+
+    @Test
+    void backStopsWhenReverseDirectionIsBlocked() {
+        Board board = gameController.board;
+        Player player = board.getPlayer(0);
+        player.setSpace(board.getSpace(0, 0));
+        player.setHeading(Heading.EAST);
+        board.getSpace(0, 0).getWalls().add(Heading.WEST);
+
+        gameController.back(player);
+
+        assertSame(board.getSpace(0, 0), player.getSpace());
+        assertEquals(Heading.EAST, player.getHeading());
+    }
+
+    @Test
     void executeStepWithInteractiveCardEntersPlayerInteraction() {
         Board board = gameController.board;
         Player player = board.getPlayer(0);
@@ -228,6 +270,27 @@ class GameControllerTest {
     }
 
     @Test
+    void executeProgramsKeepsFinishedWhenWinningAtLastRegister() {
+        Board board = gameController.board;
+        Player player = board.getPlayer(0);
+        Checkpoint checkpoint = new Checkpoint();
+        checkpoint.setId(1);
+        checkpoint.setIsLastCheckpoint(true);
+        player.getSpace().getActions().add(checkpoint);
+
+        board.setPhase(Phase.ACTIVATION);
+        board.setStep(Player.NO_REGISTERS - 1);
+        board.setCurrentPlayer(player);
+        board.setStepMode(false);
+
+        gameController.executePrograms();
+
+        assertEquals(Phase.FINISHED, board.getPhase());
+        assertTrue(player.getHasWon());
+        assertEquals(1, player.getCheckpointCount());
+    }
+
+    @Test
     void executeStepCoversAllDirectCommandCards() {
         Board board = gameController.board;
         Command[] commands = {
@@ -273,7 +336,7 @@ class GameControllerTest {
                     assertEquals(Heading.WEST, player.getHeading());
                     break;
                 case BACK:
-                    assertSame(board.getSpace(5, 0), player.getSpace());
+                    assertSame(board.getSpace(7, 0), player.getSpace());
                     assertEquals(Heading.EAST, player.getHeading());
                     break;
                 default:
