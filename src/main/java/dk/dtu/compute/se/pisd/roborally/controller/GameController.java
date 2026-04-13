@@ -36,45 +36,20 @@ public class GameController {
 
     final public Board board;
 
+    /**
+     * Creates a controller for the given board instance.
+     *
+     * @param board the board whose game flow is managed by this controller
+     */
     public GameController(@NotNull Board board) {
         this.board = board;
     }
 
-    /**
-     * This is just some dummy controller operation to make a simple move to see something
-     * happening on the board. This method should eventually be deleted!
-     *
-     * @param space the space to which the current player should move
-     * @author Sam Golpasand
-     */
-    public void moveCurrentPlayerToSpace(@NotNull Space space)  {
-        try {
-            if (space.getPlayer() != null) {
-                throw new IllegalAccessError("There is already a player in that space.");
-            }
-
-            if (board.getCurrentPlayer() == null) {
-                throw new IllegalAccessError("The current player is not valid");
-            }
-
-            Player currentPlayer = board.getCurrentPlayer();
-            Space oldSpace = currentPlayer.getSpace();
-
-            oldSpace.setPlayer(null);
-
-            space.setPlayer(currentPlayer);
-            currentPlayer.setSpace(space);
-            board.setCurrentPlayer(board.getPlayer((board.getPlayerNumber(currentPlayer) + 1) % board.getPlayersNumber()));
-
-            board.incrementMoveCounter();
-        } catch (Error e) {
-            System.err.println(e);
-        }
-        
-    }
 
     /**
-     * This starts 
+     * Starts a new programming phase.
+     * Resets the phase, active player, and register step, clears all programmed
+     * registers, and deals new random command cards to each player.
      */
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);
@@ -98,14 +73,22 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    /**
+     * Creates a random command card from all available command types.
+     *
+     * @return a randomly generated command card
+     */
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
         return new CommandCard(commands[random]);
     }
 
-    // XXX A6c
+    /**
+     * Finishes the programming phase and enters activation.
+     * Hides all program fields, reveals the first register, and resets the
+     * current player and step for execution.
+     */
     public void finishProgrammingPhase() {
         makeProgramFieldsInvisible();
         makeProgramFieldsVisible(0);
@@ -114,7 +97,11 @@ public class GameController {
         board.setStep(0);
     }
 
-    // XXX A6c
+    /**
+     * Makes one specific program register visible for all players.
+     *
+     * @param register the register index to reveal
+     */
     private void makeProgramFieldsVisible(int register) {
         if (register >= 0 && register < Player.NO_REGISTERS) {
             for (int i = 0; i < board.getPlayersNumber(); i++) {
@@ -125,7 +112,9 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    /**
+     * Hides all program register fields for all players.
+     */
     private void makeProgramFieldsInvisible() {
         for (int i = 0; i < board.getPlayersNumber(); i++) {
             Player player = board.getPlayer(i);
@@ -136,13 +125,18 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    /**
+     * Executes the full activation run (all possible steps) unless interaction
+     * or phase changes interrupt the flow.
+     */
     public void executePrograms() {
         board.setStepMode(false);
         continuePrograms();
     }
 
-    // XXX A6c
+    /**
+     * Executes exactly one activation step and then pauses.
+     */
     public void executeStep() {
         board.setStepMode(true);
         continuePrograms();
@@ -161,19 +155,24 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    /**
+     * Continues program execution while activation is active and step mode is off.
+     */
     private void continuePrograms() {
         do {
             executeNextStep(null);
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
 
-    // XXX A6c
-    // DONE A6d: add the execution of the field actions at the right
-    //      place in this method
-    // DONE A6e: implement the execution af an interactive card to
-    //     this method (e.g. by switching to the PLAYER_INTERACTION phase
-    //     at the right point)
+    /**
+     * Executes the next activation step for the current player and current register.
+     * Handles interactive cards by switching to PLAYER_INTERACTION when needed,
+     * cycles through players, executes field actions after each register, and
+     * starts a new programming phase after the last register.
+     *
+     * @param choice the player's selected command option for an interactive card,
+     *               or {@code null} if no choice has been made yet
+     */
     private void executeNextStep(Command choice) {
         Player currentPlayer = board.getCurrentPlayer();
         if ((board.getPhase() == Phase.ACTIVATION || board.getPhase() == Phase.PLAYER_INTERACTION) && currentPlayer != null) {
@@ -240,7 +239,12 @@ public class GameController {
         }
     }
 
-    // XXX A6c
+    /**
+     * Executes one concrete command for the given player.
+     *
+     * @param player the player whose robot executes the command
+     * @param command the command to execute
+     */
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
@@ -388,15 +392,6 @@ public class GameController {
         }
 
         pusher.setSpace(space);
-    }
-
-    /**
-     * A method called when no corresponding controller operation is implemented yet.
-     * This should eventually be removed.
-     */
-    public void notImplemented() {
-        // XXX just for now to indicate that the actual method is not yet implemented
-        assert false;
     }
 
     public class ImpossibleMoveException extends Exception {}
