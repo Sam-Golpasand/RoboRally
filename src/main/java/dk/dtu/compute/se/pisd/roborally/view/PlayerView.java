@@ -23,9 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
-import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -212,19 +210,26 @@ public class PlayerView extends Tab implements ViewObserver {
                 playerInteractionPanel.getChildren().clear();
 
                 if (player.board.getCurrentPlayer() == player) {
-                    // TODO A6e: these buttons should be shown only when there is
+                    // DONE A6e: these buttons should be shown only when there is
                     //      an interactive command card, and the buttons should represent
                     //      the player's choices of the interactive command card. The
                     //      following is just a mockup showing two options
-                    Button optionButton = new Button("Option1");
-                    optionButton.setOnAction( e -> gameController.notImplemented());
-                    optionButton.setDisable(false);
-                    playerInteractionPanel.getChildren().add(optionButton);
 
-                    optionButton = new Button("Option 2");
-                    optionButton.setOnAction( e -> gameController.notImplemented());
-                    optionButton.setDisable(false);
-                    playerInteractionPanel.getChildren().add(optionButton);
+                    // Get the command of the current register
+                    int currentStep = player.board.getStep();
+                    CommandCard currentCard = player.getProgramField(currentStep).getCard();
+
+                    // Check if it's the interactive card
+                    if (currentCard != null && currentCard.command == Command.LEFT_OR_RIGHT) {
+
+                        Button leftButton = new Button("Turn Left");
+                        leftButton.setOnAction(e -> gameController.interact(Command.LEFT));
+
+                        Button rightButton = new Button("Turn Right");
+                        rightButton.setOnAction(e -> gameController.interact(Command.RIGHT));
+
+                        playerInteractionPanel.getChildren().addAll(leftButton, rightButton);
+                    }
                 }
             }
         }

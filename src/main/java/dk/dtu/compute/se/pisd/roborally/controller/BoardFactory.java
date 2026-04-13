@@ -123,6 +123,7 @@ public class BoardFactory {
         space = board.getSpace(4,5);
         actionCheckpoint = new Checkpoint();
         actionCheckpoint.setId(2);
+        actionCheckpoint.setIsLastCheckpoint(true);
         space.getActions().add(actionCheckpoint);
 
         return board;
@@ -183,6 +184,7 @@ public class BoardFactory {
         space = board.getSpace(10,9);
         actionCheckpoint = new Checkpoint();
         actionCheckpoint.setId(3);
+        actionCheckpoint.setIsLastCheckpoint(true);
         space.getActions().add(actionCheckpoint);
 
 

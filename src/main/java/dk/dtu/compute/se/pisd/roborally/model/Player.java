@@ -50,6 +50,8 @@ public class Player extends Subject {
 
     private int checkpointCount = 0;
 
+    private boolean hasWon = false;
+
     public Player(@NotNull Board board, String color, @NotNull String name) {
         this.board = board;
         this.name = name;
@@ -141,5 +143,13 @@ public class Player extends Subject {
 
     public void setCheckpointCount(int checkpointCount) {
         this.checkpointCount = checkpointCount;
+    }
+
+    public boolean getHasWon() {
+        return hasWon;
+    }
+
+    public void setHasWon(boolean hasWon) {
+        this.hasWon = hasWon;
     }
 }
