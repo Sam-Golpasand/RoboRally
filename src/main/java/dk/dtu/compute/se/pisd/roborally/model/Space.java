@@ -84,7 +84,6 @@ public class Space extends Subject {
      *
      * @return the list of walls on this space
      */
-    // XXX A3
     public List<Heading> getWalls() {
         return walls;
     }
@@ -97,7 +96,6 @@ public class Space extends Subject {
      *
      * @return the list of field actions on this space
      */
-    // XXX A3
     public List<FieldAction> getActions() {
         return actions;
     }

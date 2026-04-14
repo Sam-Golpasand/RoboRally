@@ -13,7 +13,6 @@ import dk.dtu.compute.se.pisd.roborally.model.Space;
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  */
-// XXX A3: might be used for creating a first slightly more interesting board.
 public class BoardFactory {
 
     /**

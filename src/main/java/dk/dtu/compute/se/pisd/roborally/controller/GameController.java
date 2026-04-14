@@ -291,10 +291,6 @@ public class GameController {
         Space from = player.getSpace();
         Space to = board.getNeighbour(from, heading);
 
-        if (to == null) {
-            return;
-        }
-
 
         try {
             moveToSpace(player, to, heading);
