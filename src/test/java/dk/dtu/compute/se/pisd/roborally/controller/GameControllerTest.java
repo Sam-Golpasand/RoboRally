@@ -362,6 +362,7 @@ class GameControllerTest {
         player.getProgramField(0).setCard(new CommandCard(Command.FORWARD));
         player.getProgramField(1).setCard(new CommandCard(Command.LEFT));
         player.getProgramField(2).setCard(new CommandCard(Command.FORWARD));
+        player.getProgramField(3).setCard(new CommandCard(Command.LEFT));
         player.getProgramField(4).setCard(new CommandCard(Command.FAST_FORWARD));
 
         // Prepare the activation phase manually
