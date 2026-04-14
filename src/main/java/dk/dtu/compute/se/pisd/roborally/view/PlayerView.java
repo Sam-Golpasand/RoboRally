@@ -136,8 +136,6 @@ public class PlayerView extends Tab implements ViewObserver {
     @Override
     public void updateView(Subject subject) {
         if (subject == player.board) {
-            // DONE A6d: update the status label for this player (showing the number
-            //     of achieved checkpoints)
             statusLabel.setText("Checkpoints achieved: " + player.getCheckpointCount());
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];

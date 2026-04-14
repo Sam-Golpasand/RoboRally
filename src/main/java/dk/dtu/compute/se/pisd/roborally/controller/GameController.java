@@ -253,9 +253,6 @@ public class GameController {
      */
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
-            // XXX This is a very simplistic way of dealing with some basic cards and
-            //     their execution. This should eventually be done in a more elegant way
-            //     (this concerns the way cards are modelled as well as the way they are executed).
 
             switch (command) {
                 case FORWARD:
@@ -282,8 +279,6 @@ public class GameController {
         }
     }
 
-    // DONE A6c: implement this method
-
     /**
      * Moves the specified player one space forward in the direction they are currently facing.
      * If the target space is invalid (e.g., off the board), the player remains in their current position.
@@ -309,8 +304,6 @@ public class GameController {
 
     }
 
-    // DONE A6c: implement this method
-
     /**
      * Moves the specified player two spaces forward in their current heading
      * direction. This method calls the {@code moveForward} method twice to
@@ -324,8 +317,6 @@ public class GameController {
 
     }
 
-    // DONE A6c: implement this method
-
     /**
      * Turns the specified player 90 degrees to the right, changing their heading
      * to the next value in the circular sequence of headings defined by the Heading enum.
@@ -338,8 +329,6 @@ public class GameController {
         player.setHeading(playerHeading.next());
     }
 
-    // DONE A6c: implement this method
-
     /**
      * Turns the specified player 90 degrees to the left, changing their heading
      * to the previous value in the circular sequence of headings defined by the Heading enum.
@@ -351,8 +340,6 @@ public class GameController {
         Heading playerHeading = player.getHeading();
         player.setHeading(playerHeading.prev());
     }
-
-    // DONE A6c: Add two methods for the new commands BACK and UTURN here.
 
     /**
      * Executes a U-turn for the specified player. A U-turn involves the player
