@@ -103,12 +103,9 @@ public class AppController implements Observer {
     }
 
     public void saveGame() {
-        // TODO DB4a: needs to be implemented
     }
 
     public void loadGame() {
-        // TODO DB4a: needs to be implemented
-        // for now, we just create a new game
         if (gameController == null) {
             newGame();
         }

@@ -1,11 +1,6 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Command;
-import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -349,4 +344,37 @@ class GameControllerTest {
         }
     }
 
+    @Test
+    void executeProgramsReachesAllCheckpointsAndFinishesGame() {
+        // Get the "simple" board from BoardFactory
+        Board simpleBoard = BoardFactory.getInstance().createBoard("simple");
+        GameController controller = new GameController(simpleBoard);
+
+        // Create a player and add them to the simple board
+        Player player = new Player(simpleBoard, null, "Winner");
+        simpleBoard.addPlayer(player);
+        simpleBoard.setCurrentPlayer(player);
+
+        player.setSpace(simpleBoard.getSpace(3, 6));
+        player.setHeading(Heading.SOUTH);
+
+        // Program the registers to navigate to Checkpoint 1 and then Checkpoint 2
+        player.getProgramField(0).setCard(new CommandCard(Command.FORWARD));
+        player.getProgramField(1).setCard(new CommandCard(Command.LEFT));
+        player.getProgramField(2).setCard(new CommandCard(Command.FORWARD));
+        player.getProgramField(4).setCard(new CommandCard(Command.FAST_FORWARD));
+
+        // Prepare the activation phase manually
+        simpleBoard.setPhase(Phase.ACTIVATION);
+        simpleBoard.setStep(0);
+        simpleBoard.setStepMode(false); // We want to execute the full program automatically
+
+        // Execute the programmed cards
+        controller.executePrograms();
+
+        // Verify the results to ensure coverage goals are met
+        assertTrue(player.getHasWon(), "The player should be marked as having won the game.");
+        assertEquals(2, player.getCheckpointCount(), "The player should have collected exactly 2 checkpoints.");
+        assertEquals(Phase.FINISHED, simpleBoard.getPhase(), "The GameController should have set the board phase to FINISHED.");
+    }
 }
