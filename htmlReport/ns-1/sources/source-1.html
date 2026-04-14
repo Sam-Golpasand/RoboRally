@@ -1,0 +1,285 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AppController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">dk.dtu.compute.se.pisd.roborally.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: AppController (dk.dtu.compute.se.pisd.roborally.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AppController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/46)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; *  This file is part of the initial project provided for the
+&nbsp; *  course &quot;Project in Software Development (02362)&quot; held at
+&nbsp; *  DTU Compute at the Technical University of Denmark.
+&nbsp; *
+&nbsp; *  Copyright (C) 2019, 2020: Ekkart Kindler, ekki@dtu.dk
+&nbsp; *
+&nbsp; *  This software is free software; you can redistribute it and/or modify
+&nbsp; *  it under the terms of the GNU General Public License as published by
+&nbsp; *  the Free Software Foundation; version 2 of the License.
+&nbsp; *
+&nbsp; *  This project is distributed in the hope that it will be useful,
+&nbsp; *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+&nbsp; *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+&nbsp; *  GNU General Public License for more details.
+&nbsp; *
+&nbsp; *  You should have received a copy of the GNU General Public License
+&nbsp; *  along with this project; if not, write to the Free Software
+&nbsp; *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+&nbsp; *
+&nbsp; */
+&nbsp;package dk.dtu.compute.se.pisd.roborally.controller;
+&nbsp;
+&nbsp;import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
+&nbsp;import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+&nbsp;
+&nbsp;import dk.dtu.compute.se.pisd.roborally.RoboRally;
+&nbsp;
+&nbsp;import dk.dtu.compute.se.pisd.roborally.model.Board;
+&nbsp;import dk.dtu.compute.se.pisd.roborally.model.Player;
+&nbsp;
+&nbsp;import javafx.application.Platform;
+&nbsp;import javafx.scene.control.Alert;
+&nbsp;import javafx.scene.control.Alert.AlertType;
+&nbsp;import javafx.scene.control.ButtonType;
+&nbsp;import javafx.scene.control.ChoiceDialog;
+&nbsp;import org.jetbrains.annotations.NotNull;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;/**
+&nbsp; * ...
+&nbsp; *
+&nbsp; * @author Ekkart Kindler, ekki@dtu.dk
+&nbsp; *
+&nbsp; */
+&nbsp;public class AppController implements Observer {
+&nbsp;
+<b class="nc">&nbsp;    final private List&lt;Integer&gt; PLAYER_NUMBER_OPTIONS = Arrays.asList(2, 3, 4, 5, 6);</b>
+&nbsp;
+<b class="nc">&nbsp;    final private List&lt;String&gt; PLAYER_COLORS = Arrays.asList(&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;orange&quot;, &quot;grey&quot;, &quot;magenta&quot;);</b>
+&nbsp;
+&nbsp;    final private RoboRally roboRally;
+&nbsp;
+&nbsp;    private GameController gameController;
+&nbsp;
+<b class="nc">&nbsp;    public AppController(@NotNull RoboRally roboRally) {</b>
+<b class="nc">&nbsp;        this.roboRally = roboRally;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void newGame() {
+<b class="nc">&nbsp;        ChoiceDialog&lt;Integer&gt; dialogPlayer = new ChoiceDialog&lt;&gt;(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);</b>
+<b class="nc">&nbsp;        dialogPlayer.setTitle(&quot;Player number&quot;);</b>
+<b class="nc">&nbsp;        dialogPlayer.setHeaderText(&quot;Select number of players&quot;);</b>
+<b class="nc">&nbsp;        Optional&lt;Integer&gt; resultPlayer = dialogPlayer.showAndWait();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (resultPlayer.isPresent()) {</b>
+<b class="nc">&nbsp;            if (gameController != null) {</b>
+&nbsp;                // The UI should not allow this, but in case this happens anyway.
+&nbsp;                // give the user the option to save the game or abort this operation!
+<b class="nc">&nbsp;                if (!stopGame()) {</b>
+&nbsp;                    return;
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;            BoardFactory factory = BoardFactory.getInstance();</b>
+<b class="nc">&nbsp;            ChoiceDialog&lt;String&gt; dialogBoard = new ChoiceDialog&lt;&gt;(factory.getBoards().get(0), factory.getBoards());</b>
+<b class="nc">&nbsp;            dialogBoard.setTitle(&quot;Board type&quot;);</b>
+<b class="nc">&nbsp;            dialogBoard.setHeaderText(&quot;Select a type of board&quot;);</b>
+<b class="nc">&nbsp;            Optional&lt;String&gt; resultWall = dialogBoard.showAndWait();</b>
+&nbsp;
+<b class="nc">&nbsp;            if (resultWall.isPresent()) {</b>
+&nbsp;
+<b class="nc">&nbsp;                String chosenBoardName = resultWall.get();</b>
+<b class="nc">&nbsp;                Board board = factory.createBoard(chosenBoardName);</b>
+<b class="nc">&nbsp;                gameController = new GameController(board);</b>
+<b class="nc">&nbsp;                int no = resultPlayer.get();</b>
+<b class="nc">&nbsp;                for (int i = 0; i &lt; no; i++) {</b>
+<b class="nc">&nbsp;                    Player player = new Player(board, PLAYER_COLORS.get(i), &quot;Player &quot; + (i + 1));</b>
+<b class="nc">&nbsp;                    board.addPlayer(player);</b>
+<b class="nc">&nbsp;                    player.setSpace(board.getSpace(i % board.width, i));</b>
+&nbsp;                }
+&nbsp;                // XXX V2
+<b class="nc">&nbsp;                gameController.startProgrammingPhase();</b>
+&nbsp;
+<b class="nc">&nbsp;                roboRally.createBoardView(gameController);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void saveGame() {
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void loadGame() {
+<b class="nc">&nbsp;        if (gameController == null) {</b>
+<b class="nc">&nbsp;            newGame();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Stop playing the current game, giving the user the option to save
+&nbsp;     * the game or to cancel stopping the game. The method returns true
+&nbsp;     * if the game was successfully stopped (with or without saving the
+&nbsp;     * game); returns false, if the current game was not stopped. In case
+&nbsp;     * there is no current game, false is returned.
+&nbsp;     *
+&nbsp;     * @return true if the current game was stopped, false otherwise
+&nbsp;     */
+&nbsp;    public boolean stopGame() {
+<b class="nc">&nbsp;        if (gameController != null) {</b>
+&nbsp;
+&nbsp;            // here we save the game (without asking the user).
+<b class="nc">&nbsp;            saveGame();</b>
+&nbsp;
+<b class="nc">&nbsp;            gameController = null;</b>
+<b class="nc">&nbsp;            roboRally.createBoardView(null);</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Exits the RoboRally application. If there is an ongoing game, the
+&nbsp;     * user will be prompted.
+&nbsp;     */
+&nbsp;    public void exit() {
+<b class="nc">&nbsp;        if (gameController != null) {</b>
+<b class="nc">&nbsp;            Alert alert = new Alert(AlertType.CONFIRMATION);</b>
+<b class="nc">&nbsp;            alert.setTitle(&quot;Exit RoboRally?&quot;);</b>
+<b class="nc">&nbsp;            alert.setContentText(&quot;Are you sure you want to exit RoboRally?&quot;);</b>
+<b class="nc">&nbsp;            Optional&lt;ButtonType&gt; result = alert.showAndWait();</b>
+&nbsp;
+<b class="nc">&nbsp;            if (!result.isPresent() || result.get() != ButtonType.OK) {</b>
+&nbsp;                return; // return without exiting the application
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // If the user did not cancel, the RoboRally application will exit
+&nbsp;        // after the option to save the game
+<b class="nc">&nbsp;        if (gameController == null || stopGame()) {</b>
+<b class="nc">&nbsp;            Platform.exit();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isGameRunning() {
+<b class="nc">&nbsp;        return gameController != null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void update(Subject subject) {
+&nbsp;        // XXX do nothing for now
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-04-14 20:35</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,323 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > BoardFactory</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">dk.dtu.compute.se.pisd.roborally.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: BoardFactory (dk.dtu.compute.se.pisd.roborally.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BoardFactory</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    71.4%
+  </span>
+  <span class="absValue">
+    (5/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    52.8%
+  </span>
+  <span class="absValue">
+    (47/89)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package dk.dtu.compute.se.pisd.roborally.controller;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import dk.dtu.compute.se.pisd.roborally.model.Board;
+&nbsp;import dk.dtu.compute.se.pisd.roborally.model.Heading;
+&nbsp;import dk.dtu.compute.se.pisd.roborally.model.Space;
+&nbsp;
+&nbsp;/**
+&nbsp; * A factory for creating boards. The factory itself is implemented as a singleton.
+&nbsp; *
+&nbsp; * @author Ekkart Kindler, ekki@dtu.dk
+&nbsp; */
+&nbsp;// XXX A3: might be used for creating a first slightly more interesting board.
+&nbsp;public class BoardFactory {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The single instance of this class, which is lazily instantiated on demand.
+&nbsp;     */
+<b class="fc">&nbsp;    static private BoardFactory instance = null;</b>
+&nbsp;    static private List&lt;String&gt; boardNames;
+&nbsp;    /**
+&nbsp;     * Constructor for BoardFactory. It is private in order to make the factory a singleton.
+&nbsp;     */
+<b class="fc">&nbsp;    private BoardFactory() {</b>
+<b class="fc">&nbsp;        List&lt;String&gt; availableBoards = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        availableBoards.add(&quot;simple&quot;);</b>
+<b class="fc">&nbsp;        availableBoards.add(&quot;advanced&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        boardNames = Collections.unmodifiableList(availableBoards);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the single instance of this factory. The instance is lazily
+&nbsp;     * instantiated when requested for the first time.
+&nbsp;     *
+&nbsp;     * @return the single instance of the BoardFactory
+&nbsp;     */
+&nbsp;    public static BoardFactory getInstance() {
+<b class="pc">&nbsp;        if (instance == null) {</b>
+<b class="fc">&nbsp;            instance = new BoardFactory();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return instance;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new board of given name of a board, which indicates
+&nbsp;     * which type of board should be created. For now the name is ignored.
+&nbsp;     *
+&nbsp;     * @param name the given name board
+&nbsp;     * @return the new board corresponding to that name
+&nbsp;     * @author Sam Golpasand
+&nbsp;     */
+&nbsp;    public Board createBoard(String name) {
+&nbsp;
+&nbsp;        Board board;
+&nbsp;
+<b class="pc">&nbsp;        switch (name) {</b>
+&nbsp;            case &quot;simple&quot;:
+<b class="fc">&nbsp;                board = buildSimpleBoard();</b>
+&nbsp;                break;
+&nbsp;            case &quot;advanced&quot;:
+<b class="nc">&nbsp;                board = buildAdvancedBoard();</b>
+&nbsp;                break;
+&nbsp;            default:
+<b class="nc">&nbsp;                board = buildSimpleBoard();</b>
+&nbsp;                break;
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return board;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Configures a board by setting up walls and conveyor belts at specific spaces
+&nbsp;     * to create a simple board structure.
+&nbsp;     *
+&nbsp;     * @param board the board to be configured as a simple board
+&nbsp;     * @return the configured simple board
+&nbsp;     * @author Sam Golpasand
+&nbsp;     */
+&nbsp;    private Board buildSimpleBoard() {
+<b class="fc">&nbsp;        Board board = new Board(8, 8, &quot;simple&quot;);</b>
+&nbsp;
+&nbsp;        
+&nbsp;        // add some walls, actions and checkpoints to some spaces
+<b class="fc">&nbsp;        Space space = board.getSpace(0,0);</b>
+<b class="fc">&nbsp;        space.getWalls().add(Heading.SOUTH);</b>
+<b class="fc">&nbsp;        ConveyorBelt action  = new ConveyorBelt();</b>
+<b class="fc">&nbsp;        action.setHeading(Heading.WEST);</b>
+<b class="fc">&nbsp;        space.getActions().add(action);</b>
+&nbsp;
+<b class="fc">&nbsp;        space = board.getSpace(1,0);</b>
+<b class="fc">&nbsp;        space.getWalls().add(Heading.NORTH);</b>
+<b class="fc">&nbsp;        action  = new ConveyorBelt();</b>
+<b class="fc">&nbsp;        action.setHeading(Heading.WEST);</b>
+<b class="fc">&nbsp;        space.getActions().add(action);</b>
+&nbsp;
+<b class="fc">&nbsp;        space = board.getSpace(1,1);</b>
+<b class="fc">&nbsp;        space.getWalls().add(Heading.WEST);</b>
+<b class="fc">&nbsp;        action  = new ConveyorBelt();</b>
+<b class="fc">&nbsp;        action.setHeading(Heading.NORTH);</b>
+<b class="fc">&nbsp;        space.getActions().add(action);</b>
+&nbsp;
+<b class="fc">&nbsp;        space = board.getSpace(5,5);</b>
+<b class="fc">&nbsp;        space.getWalls().add(Heading.SOUTH);</b>
+<b class="fc">&nbsp;        action  = new ConveyorBelt();</b>
+<b class="fc">&nbsp;        action.setHeading(Heading.WEST);</b>
+<b class="fc">&nbsp;        space.getActions().add(action);</b>
+&nbsp;
+<b class="fc">&nbsp;        space = board.getSpace(6,5);</b>
+<b class="fc">&nbsp;        action  = new ConveyorBelt();</b>
+<b class="fc">&nbsp;        action.setHeading(Heading.WEST);</b>
+<b class="fc">&nbsp;        space.getActions().add(action);</b>
+&nbsp;
+<b class="fc">&nbsp;        space = board.getSpace(3,7);</b>
+<b class="fc">&nbsp;        Checkpoint actionCheckpoint = new Checkpoint();</b>
+<b class="fc">&nbsp;        actionCheckpoint.setId(1);</b>
+<b class="fc">&nbsp;        space.getActions().add(actionCheckpoint);</b>
+&nbsp;
+<b class="fc">&nbsp;        space = board.getSpace(4,5);</b>
+<b class="fc">&nbsp;        actionCheckpoint = new Checkpoint();</b>
+<b class="fc">&nbsp;        actionCheckpoint.setId(2);</b>
+<b class="fc">&nbsp;        actionCheckpoint.setIsLastCheckpoint(true);</b>
+<b class="fc">&nbsp;        space.getActions().add(actionCheckpoint);</b>
+&nbsp;
+<b class="fc">&nbsp;        return board;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructs and configures an advanced board by setting up walls, conveyor belts,
+&nbsp;     * and checkpoints on specific spaces of the provided board.
+&nbsp;     *
+&nbsp;     * @param board the board to be configured as an advanced board
+&nbsp;     * @return the configured advanced board
+&nbsp;     * @author Sam Golpasand
+&nbsp;     */
+&nbsp;    private Board buildAdvancedBoard() {
+&nbsp;
+<b class="nc">&nbsp;        Board board = new Board(12, 12, &quot;advanced&quot;);</b>
+&nbsp;        
+&nbsp;        // add some walls, actions and checkpoints to some spaces
+<b class="nc">&nbsp;        Space space = board.getSpace(0,0);</b>
+<b class="nc">&nbsp;        space.getWalls().add(Heading.SOUTH);</b>
+<b class="nc">&nbsp;        ConveyorBelt action  = new ConveyorBelt();</b>
+<b class="nc">&nbsp;        action.setHeading(Heading.WEST);</b>
+<b class="nc">&nbsp;        space.getActions().add(action);</b>
+&nbsp;
+<b class="nc">&nbsp;        space = board.getSpace(5,6);</b>
+<b class="nc">&nbsp;        space.getWalls().add(Heading.NORTH);</b>
+<b class="nc">&nbsp;        action  = new ConveyorBelt();</b>
+<b class="nc">&nbsp;        action.setHeading(Heading.WEST);</b>
+<b class="nc">&nbsp;        space.getActions().add(action);</b>
+&nbsp;
+<b class="nc">&nbsp;        space = board.getSpace(6,3);</b>
+<b class="nc">&nbsp;        space.getWalls().add(Heading.WEST);</b>
+<b class="nc">&nbsp;        action  = new ConveyorBelt();</b>
+<b class="nc">&nbsp;        action.setHeading(Heading.NORTH);</b>
+<b class="nc">&nbsp;        space.getActions().add(action);</b>
+&nbsp;
+<b class="nc">&nbsp;        space = board.getSpace(2,3);</b>
+<b class="nc">&nbsp;        space.getWalls().add(Heading.SOUTH);</b>
+<b class="nc">&nbsp;        action  = new ConveyorBelt();</b>
+<b class="nc">&nbsp;        action.setHeading(Heading.WEST);</b>
+<b class="nc">&nbsp;        space.getActions().add(action);</b>
+&nbsp;
+<b class="nc">&nbsp;        space = board.getSpace(3,5);</b>
+<b class="nc">&nbsp;        action  = new ConveyorBelt();</b>
+<b class="nc">&nbsp;        action.setHeading(Heading.WEST);</b>
+<b class="nc">&nbsp;        space.getActions().add(action);</b>
+&nbsp;
+<b class="nc">&nbsp;        space = board.getSpace(3,7);</b>
+<b class="nc">&nbsp;        Checkpoint actionCheckpoint = new Checkpoint();</b>
+<b class="nc">&nbsp;        actionCheckpoint.setId(1);</b>
+<b class="nc">&nbsp;        space.getActions().add(actionCheckpoint);</b>
+&nbsp;
+<b class="nc">&nbsp;        space = board.getSpace(4,5);</b>
+<b class="nc">&nbsp;        actionCheckpoint = new Checkpoint();</b>
+<b class="nc">&nbsp;        actionCheckpoint.setId(2);</b>
+<b class="nc">&nbsp;        space.getActions().add(actionCheckpoint);</b>
+&nbsp;
+<b class="nc">&nbsp;        space = board.getSpace(10,9);</b>
+<b class="nc">&nbsp;        actionCheckpoint = new Checkpoint();</b>
+<b class="nc">&nbsp;        actionCheckpoint.setId(3);</b>
+<b class="nc">&nbsp;        actionCheckpoint.setIsLastCheckpoint(true);</b>
+<b class="nc">&nbsp;        space.getActions().add(actionCheckpoint);</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        return board;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get all the available boards from the private boardNames list.
+&nbsp;     * 
+&nbsp;     * @return list of board names
+&nbsp;     * @author Sam Golpasand
+&nbsp;     */
+&nbsp;    public List&lt;String&gt; getBoards() {
+<b class="nc">&nbsp;        return boardNames;</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-04-14 20:35</div>
+</div>
+</body>
+</html>

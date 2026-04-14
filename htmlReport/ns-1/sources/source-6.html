@@ -1,0 +1,565 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GameController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">dk.dtu.compute.se.pisd.roborally.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: GameController (dk.dtu.compute.se.pisd.roborally.controller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82.9%
+  </span>
+  <span class="absValue">
+    (58/70)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.2%
+  </span>
+  <span class="absValue">
+    (107/109)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GameController$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">GameController$ImpossibleMoveException</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (23/23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82.9%
+  </span>
+  <span class="absValue">
+    (58/70)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.2%
+  </span>
+  <span class="absValue">
+    (109/111)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; *  This file is part of the initial project provided for the
+&nbsp; *  course &quot;Project in Software Development (02362)&quot; held at
+&nbsp; *  DTU Compute at the Technical University of Denmark.
+&nbsp; *
+&nbsp; *  Copyright (C) 2019, 2020: Ekkart Kindler, ekki@dtu.dk
+&nbsp; *
+&nbsp; *  This software is free software; you can redistribute it and/or modify
+&nbsp; *  it under the terms of the GNU General Public License as published by
+&nbsp; *  the Free Software Foundation; version 2 of the License.
+&nbsp; *
+&nbsp; *  This project is distributed in the hope that it will be useful,
+&nbsp; *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+&nbsp; *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+&nbsp; *  GNU General Public License for more details.
+&nbsp; *
+&nbsp; *  You should have received a copy of the GNU General Public License
+&nbsp; *  along with this project; if not, write to the Free Software
+&nbsp; *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+&nbsp; *
+&nbsp; */
+&nbsp;package dk.dtu.compute.se.pisd.roborally.controller;
+&nbsp;
+&nbsp;import dk.dtu.compute.se.pisd.roborally.model.*;
+&nbsp;import org.jetbrains.annotations.NotNull;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * ...
+&nbsp; *
+&nbsp; * @author Ekkart Kindler, ekki@dtu.dk
+&nbsp; *
+&nbsp; */
+<b class="fc">&nbsp;public class GameController {</b>
+&nbsp;
+&nbsp;    final public Board board;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a controller for the given board instance.
+&nbsp;     *
+&nbsp;     * @param board the board whose game flow is managed by this controller
+&nbsp;     */
+<b class="fc">&nbsp;    public GameController(@NotNull Board board) {</b>
+<b class="fc">&nbsp;        this.board = board;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Starts a new programming phase.
+&nbsp;     * Resets the phase, active player, and register step, clears all programmed
+&nbsp;     * registers, and deals new random command cards to each player.
+&nbsp;     */
+&nbsp;    public void startProgrammingPhase() {
+<b class="fc">&nbsp;        board.setPhase(Phase.PROGRAMMING);</b>
+<b class="fc">&nbsp;        board.setCurrentPlayer(board.getPlayer(0));</b>
+<b class="fc">&nbsp;        board.setStep(0);</b>
+&nbsp;
+<b class="fc">&nbsp;        for (int i = 0; i &lt; board.getPlayersNumber(); i++) {</b>
+<b class="fc">&nbsp;            Player player = board.getPlayer(i);</b>
+<b class="pc">&nbsp;            if (player != null) {</b>
+<b class="fc">&nbsp;                for (int j = 0; j &lt; Player.NO_REGISTERS; j++) {</b>
+<b class="fc">&nbsp;                    CommandCardField field = player.getProgramField(j);</b>
+<b class="fc">&nbsp;                    field.setCard(null);</b>
+<b class="fc">&nbsp;                    field.setVisible(true);</b>
+&nbsp;                }
+<b class="fc">&nbsp;                for (int j = 0; j &lt; Player.NO_CARDS; j++) {</b>
+<b class="fc">&nbsp;                    CommandCardField field = player.getCardField(j);</b>
+<b class="fc">&nbsp;                    field.setCard(generateRandomCommandCard());</b>
+<b class="fc">&nbsp;                    field.setVisible(true);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a random command card from all available command types.
+&nbsp;     *
+&nbsp;     * @return a randomly generated command card
+&nbsp;     */
+&nbsp;    private CommandCard generateRandomCommandCard() {
+<b class="fc">&nbsp;        Command[] commands = Command.values();</b>
+<b class="fc">&nbsp;        int random = (int) (Math.random() * commands.length);</b>
+<b class="fc">&nbsp;        return new CommandCard(commands[random]);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finishes the programming phase and enters activation.
+&nbsp;     * Hides all program fields, reveals the first register, and resets the
+&nbsp;     * current player and step for execution.
+&nbsp;     */
+&nbsp;    public void finishProgrammingPhase() {
+<b class="fc">&nbsp;        makeProgramFieldsInvisible();</b>
+<b class="fc">&nbsp;        makeProgramFieldsVisible(0);</b>
+<b class="fc">&nbsp;        board.setPhase(Phase.ACTIVATION);</b>
+<b class="fc">&nbsp;        board.setCurrentPlayer(board.getPlayer(0));</b>
+<b class="fc">&nbsp;        board.setStep(0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Makes one specific program register visible for all players.
+&nbsp;     *
+&nbsp;     * @param register the register index to reveal
+&nbsp;     */
+&nbsp;    private void makeProgramFieldsVisible(int register) {
+<b class="pc">&nbsp;        if (register &gt;= 0 &amp;&amp; register &lt; Player.NO_REGISTERS) {</b>
+<b class="fc">&nbsp;            for (int i = 0; i &lt; board.getPlayersNumber(); i++) {</b>
+<b class="fc">&nbsp;                Player player = board.getPlayer(i);</b>
+<b class="fc">&nbsp;                CommandCardField field = player.getProgramField(register);</b>
+<b class="fc">&nbsp;                field.setVisible(true);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Hides all program register fields for all players.
+&nbsp;     */
+&nbsp;    private void makeProgramFieldsInvisible() {
+<b class="fc">&nbsp;        for (int i = 0; i &lt; board.getPlayersNumber(); i++) {</b>
+<b class="fc">&nbsp;            Player player = board.getPlayer(i);</b>
+<b class="fc">&nbsp;            for (int j = 0; j &lt; Player.NO_REGISTERS; j++) {</b>
+<b class="fc">&nbsp;                CommandCardField field = player.getProgramField(j);</b>
+<b class="fc">&nbsp;                field.setVisible(false);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Executes the full activation run (all possible steps) unless interaction
+&nbsp;     * or phase changes interrupt the flow.
+&nbsp;     */
+&nbsp;    public void executePrograms() {
+<b class="fc">&nbsp;        board.setStepMode(false);</b>
+<b class="fc">&nbsp;        continuePrograms();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Executes exactly one activation step and then pauses.
+&nbsp;     */
+&nbsp;    public void executeStep() {
+<b class="fc">&nbsp;        board.setStepMode(true);</b>
+<b class="fc">&nbsp;        continuePrograms();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the interaction phase by executing the next step based on the provided command
+&nbsp;     * and continuing program execution if the system is not in step mode.
+&nbsp;     *
+&nbsp;     * @param choice the command representing the player&#39;s chosen action; must not be null
+&nbsp;     */
+&nbsp;    public void interact(Command choice) {
+<b class="fc">&nbsp;        executeNextStep(choice); // Pass the choice to the step execution</b>
+<b class="fc">&nbsp;        if (!board.isStepMode()) {</b>
+<b class="fc">&nbsp;            continuePrograms();  // Resume full execution if not in step mode</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Continues program execution while activation is active and step mode is off.
+&nbsp;     */
+&nbsp;    private void continuePrograms() {
+&nbsp;        do {
+<b class="fc">&nbsp;            executeNextStep(null);</b>
+<b class="fc">&nbsp;        } while (board.getPhase() == Phase.ACTIVATION &amp;&amp; !board.isStepMode());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Executes the next activation step for the current player and current register.
+&nbsp;     * Handles interactive cards by switching to PLAYER_INTERACTION when needed,
+&nbsp;     * cycles through players, executes field actions after each register, and
+&nbsp;     * starts a new programming phase after the last register.
+&nbsp;     *
+&nbsp;     * @param choice the player&#39;s selected command option for an interactive card,
+&nbsp;     *               or {@code null} if no choice has been made yet
+&nbsp;     */
+&nbsp;    private void executeNextStep(Command choice) {
+<b class="fc">&nbsp;        Player currentPlayer = board.getCurrentPlayer();</b>
+<b class="pc">&nbsp;        if ((board.getPhase() == Phase.ACTIVATION || board.getPhase() == Phase.PLAYER_INTERACTION) &amp;&amp; currentPlayer != null) {</b>
+<b class="fc">&nbsp;            int step = board.getStep();</b>
+<b class="pc">&nbsp;            if (step &gt;= 0 &amp;&amp; step &lt; Player.NO_REGISTERS) {</b>
+<b class="fc">&nbsp;                CommandCard card = currentPlayer.getProgramField(step).getCard();</b>
+<b class="fc">&nbsp;                if (card != null) {</b>
+<b class="fc">&nbsp;                    Command command = card.command;</b>
+<b class="fc">&nbsp;                    if (command == Command.LEFT_OR_RIGHT) {</b>
+<b class="fc">&nbsp;                        if (choice == null) {</b>
+&nbsp;                            // there has been no choice made yet, change phase and stop the loop
+<b class="fc">&nbsp;                            board.setPhase(Phase.PLAYER_INTERACTION);</b>
+&nbsp;                            return;
+&nbsp;                        } else {
+&nbsp;                            // choice has been made, override the command and switch phase back
+<b class="fc">&nbsp;                            command = choice;</b>
+<b class="fc">&nbsp;                            board.setPhase(Phase.ACTIVATION);</b>
+&nbsp;                        }
+&nbsp;                    }
+<b class="fc">&nbsp;                    executeCommand(currentPlayer, command);</b>
+&nbsp;                }
+<b class="fc">&nbsp;                int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;</b>
+<b class="fc">&nbsp;                if (nextPlayerNumber &lt; board.getPlayersNumber()) {</b>
+<b class="fc">&nbsp;                    board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));</b>
+&nbsp;                } else {
+<b class="fc">&nbsp;                    executeFieldActions();</b>
+&nbsp;
+<b class="fc">&nbsp;                    if (board.getPhase() != Phase.ACTIVATION) {</b>
+&nbsp;                        return;
+&nbsp;                    }
+&nbsp;
+<b class="fc">&nbsp;                    step++;</b>
+<b class="fc">&nbsp;                    if (step &lt; Player.NO_REGISTERS) {</b>
+<b class="fc">&nbsp;                        makeProgramFieldsVisible(step);</b>
+<b class="fc">&nbsp;                        board.setStep(step);</b>
+<b class="fc">&nbsp;                        board.setCurrentPlayer(board.getPlayer(0));</b>
+&nbsp;                    } else {
+<b class="fc">&nbsp;                        startProgrammingPhase();</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            } else {
+&nbsp;                // this should not happen
+<b class="nc">&nbsp;                assert false;</b>
+&nbsp;            }
+&nbsp;        } else {
+&nbsp;            // this should not happen
+<b class="nc">&nbsp;            assert false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Executes all field actions for the players on the board.
+&nbsp;     *
+&nbsp;     * @author Magnus Dragheim
+&nbsp;     */
+&nbsp;    private void executeFieldActions() {
+<b class="fc">&nbsp;       List&lt;Player&gt; players = board.getPlayers();</b>
+&nbsp;       
+<b class="fc">&nbsp;       for (int i = 0; i &lt; players.size(); i++) {</b>
+<b class="fc">&nbsp;           Player currentPlayer = players.get(i);</b>
+<b class="fc">&nbsp;           Space currentSpace = currentPlayer.getSpace();</b>
+&nbsp;           
+<b class="fc">&nbsp;           for (FieldAction fieldAction: currentSpace.getActions()) {</b>
+<b class="fc">&nbsp;               fieldAction.doAction(this, currentSpace);</b>
+<b class="fc">&nbsp;               if (currentPlayer.getHasWon()) {</b>
+<b class="fc">&nbsp;                   board.setPhase(Phase.FINISHED);</b>
+&nbsp;                   return;
+&nbsp;               }
+&nbsp;           }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Executes one concrete command for the given player.
+&nbsp;     *
+&nbsp;     * @param player the player whose robot executes the command
+&nbsp;     * @param command the command to execute
+&nbsp;     */
+&nbsp;    private void executeCommand(@NotNull Player player, Command command) {
+<b class="pc">&nbsp;        if (player != null &amp;&amp; player.board == board &amp;&amp; command != null) {</b>
+&nbsp;
+<b class="pc">&nbsp;            switch (command) {</b>
+&nbsp;                case FORWARD:
+<b class="fc">&nbsp;                    this.moveForward(player);</b>
+&nbsp;                    break;
+&nbsp;                case RIGHT:
+<b class="fc">&nbsp;                    this.turnRight(player);</b>
+&nbsp;                    break;
+&nbsp;                case LEFT:
+<b class="fc">&nbsp;                    this.turnLeft(player);</b>
+&nbsp;                    break;
+&nbsp;                case FAST_FORWARD:
+<b class="fc">&nbsp;                    this.fastForward(player);</b>
+&nbsp;                    break;
+&nbsp;                case U_TURN:
+<b class="fc">&nbsp;                    this.uTurn(player);</b>
+&nbsp;                    break;
+&nbsp;                case BACK:
+<b class="fc">&nbsp;                    this.back(player);</b>
+&nbsp;                    break;
+&nbsp;                default:
+&nbsp;                    // DO NOTHING (for now)//
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Moves the specified player one space forward in the direction they are currently facing.
+&nbsp;     * If the target space is invalid (e.g., off the board), the player remains in their current position.
+&nbsp;     * If the target space is unreachable due to an exceptional scenario, the move is aborted.
+&nbsp;     *
+&nbsp;     * @param player the player to move forward; must not be null
+&nbsp;     */
+&nbsp;    public void moveForward(@NotNull Player player) {
+<b class="fc">&nbsp;        Heading heading = player.getHeading();</b>
+<b class="fc">&nbsp;        Space from = player.getSpace();</b>
+<b class="fc">&nbsp;        Space to = board.getNeighbour(from, heading);</b>
+&nbsp;
+<b class="fc">&nbsp;        if (to == null) {</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            moveToSpace(player, to, heading);</b>
+&nbsp;        } catch (ImpossibleMoveException e) {
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Moves the specified player two spaces forward in their current heading
+&nbsp;     * direction. This method calls the {@code moveForward} method twice to
+&nbsp;     * achieve the effect of a double forward motion.
+&nbsp;     *
+&nbsp;     * @param player the player to move forward; must not be null
+&nbsp;     */
+&nbsp;    public void fastForward(@NotNull Player player) {
+<b class="fc">&nbsp;        moveForward(player);</b>
+<b class="fc">&nbsp;        moveForward(player);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Turns the specified player 90 degrees to the right, changing their heading
+&nbsp;     * to the next value in the circular sequence of headings defined by the Heading enum.
+&nbsp;     *
+&nbsp;     * @param player the player to turn right; must not be null
+&nbsp;     */
+&nbsp;    public void turnRight(@NotNull Player player) {
+&nbsp;
+<b class="fc">&nbsp;        Heading playerHeading = player.getHeading();</b>
+<b class="fc">&nbsp;        player.setHeading(playerHeading.next());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Turns the specified player 90 degrees to the left, changing their heading
+&nbsp;     * to the previous value in the circular sequence of headings defined by the Heading enum.
+&nbsp;     *
+&nbsp;     * @param player the player to turn left; must not be null
+&nbsp;     */
+&nbsp;    public void turnLeft(@NotNull Player player) {
+&nbsp;
+<b class="fc">&nbsp;        Heading playerHeading = player.getHeading();</b>
+<b class="fc">&nbsp;        player.setHeading(playerHeading.prev());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Executes a U-turn for the specified player. A U-turn involves the player
+&nbsp;     * turning 180 degrees by performing two consecutive left turns.
+&nbsp;     *
+&nbsp;     * @param player the player who will perform the U-turn; must not be null
+&nbsp;     */
+&nbsp;    public void uTurn(@NotNull Player player) {
+<b class="fc">&nbsp;        turnLeft(player);</b>
+<b class="fc">&nbsp;        turnLeft(player);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Moves the given player backward by executing a sequence of operations
+&nbsp;     * that simulates a reverse motion. The player performs a U-turn, moves
+&nbsp;     * forward in the new direction, and performs a final U-turn to restore
+&nbsp;     * their original heading.
+&nbsp;     *
+&nbsp;     * @param player the player to be moved backward; must not be null
+&nbsp;     */
+&nbsp;    public void back(@NotNull Player player) {
+<b class="fc">&nbsp;        uTurn(player);</b>
+<b class="fc">&nbsp;        moveForward(player);</b>
+<b class="fc">&nbsp;        uTurn(player);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Moves a player to a specified space on the board. If the target space is
+&nbsp;     * occupied by another player, the occupying player is pushed to an adjacent
+&nbsp;     * space in the same direction. If pushing is not possible, an exception is thrown.
+&nbsp;     *
+&nbsp;     * @param pusher the player who is moving into the target space
+&nbsp;     * @param space the target space to which the player is moving
+&nbsp;     * @param heading the direction in which the player is pushing if the target space is occupied
+&nbsp;     * @throws ImpossibleMoveException if the move or push cannot be completed
+&nbsp;     */
+&nbsp;    private void moveToSpace(@NotNull Player pusher, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
+<b class="fc">&nbsp;        if (space.getPlayer() != null) {</b>
+<b class="fc">&nbsp;            Player beingPushed = space.getPlayer();</b>
+<b class="fc">&nbsp;            Space to = board.getNeighbour(space, heading);</b>
+&nbsp;
+<b class="fc">&nbsp;            if (to == null) {</b>
+<b class="fc">&nbsp;                throw new ImpossibleMoveException();</b>
+&nbsp;            }
+&nbsp;            
+<b class="fc">&nbsp;            moveToSpace(beingPushed, to, heading);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        pusher.setSpace(space);</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public class ImpossibleMoveException extends Exception {}</b>
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-04-14 20:35</div>
+</div>
+</body>
+</html>
