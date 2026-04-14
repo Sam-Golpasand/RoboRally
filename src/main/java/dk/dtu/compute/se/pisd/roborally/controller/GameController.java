@@ -242,10 +242,6 @@ public class GameController {
                    return;
                }
            }
-           if (currentPlayer.getHasWon()) {
-               board.setPhase(Phase.FINISHED);
-               return;
-           }
         }
     }
 
